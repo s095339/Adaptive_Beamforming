@@ -1,0 +1,580 @@
+{
+ "system_diagram_metadata": {
+  "schema_version": {
+   "major": "2",
+   "minor": "0",
+   "patch": "0"
+  },
+  "xsa": {
+   "vendor": "xilinx",
+   "board_id": "u50",
+   "name": "gen3x16_xdma_5",
+   "version_major": "202210",
+   "version_minor": "1",
+   "description": "\nThis platform targets the Alveo U50 Data Center Accelerator Card. This high-performance acceleration platform features HBM, the expanded partial reconfiguration flow for high fabric resource availability, and Xilinx DMA Subsystem for PCI Express with PCIe Gen3 x16 connectivity.\n    ",
+   "generated_by": {
+    "name": "Vivado",
+    "version": "2022.1",
+    "cl": "3481164",
+    "time_stamp": "Thu Mar  3 20:48:35 2022"
+   },
+   "board": {
+    "name": "xilinx.com:au50:1.1",
+    "vendor": "xilinx.com",
+    "part": "xcu50-fsvh2104-2-e",
+    "board_part": "xilinx.com:au50:part0:1.1"
+   },
+   "available_resources": {
+    "LUT": "871680",
+    "REG": "1411040",
+    "BRAM": "1344",
+    "DSP": "5952",
+    "URAM": ""
+   },
+   "device_topology": [
+    {
+     "id": "0",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000000",
+     "tag": "HBM[0]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "1",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000001",
+     "tag": "HBM[10]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "2",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000002",
+     "tag": "HBM[11]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "3",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000003",
+     "tag": "HBM[12]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "4",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000004",
+     "tag": "HBM[13]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "5",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000005",
+     "tag": "HBM[14]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "6",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000006",
+     "tag": "HBM[15]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "7",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000007",
+     "tag": "HBM[16]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "8",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000008",
+     "tag": "HBM[17]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "9",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000009",
+     "tag": "HBM[18]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "10",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x0000000a",
+     "tag": "HBM[19]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "11",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x0000000b",
+     "tag": "HBM[1]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "12",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x0000000c",
+     "tag": "HBM[20]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "13",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x0000000d",
+     "tag": "HBM[21]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "14",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x0000000e",
+     "tag": "HBM[22]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "15",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x0000000f",
+     "tag": "HBM[23]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "16",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000010",
+     "tag": "HBM[24]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "17",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000011",
+     "tag": "HBM[25]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "18",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000012",
+     "tag": "HBM[26]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "19",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000013",
+     "tag": "HBM[27]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "20",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000014",
+     "tag": "HBM[28]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "21",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000015",
+     "tag": "HBM[29]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "22",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000016",
+     "tag": "HBM[2]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "23",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000017",
+     "tag": "HBM[30]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "24",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000018",
+     "tag": "HBM[31]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "25",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000019",
+     "tag": "HBM[3]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "26",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x0000001a",
+     "tag": "HBM[4]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "27",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x0000001b",
+     "tag": "HBM[5]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "28",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x0000001c",
+     "tag": "HBM[6]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "29",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x0000001d",
+     "tag": "HBM[7]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "30",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x0000001e",
+     "tag": "HBM[8]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "31",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x0000001f",
+     "tag": "HBM[9]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "32",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000020",
+     "tag": "HOST[0]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "33",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000021",
+     "tag": "PLRAM[0]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "34",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000022",
+     "tag": "PLRAM[1]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "35",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000023",
+     "tag": "PLRAM[2]",
+     "slr": "",
+     "spTag": ""
+    },
+    {
+     "id": "36",
+     "type": "Ddr4",
+     "used": "yes",
+     "sizeKB": "17179869184",
+     "base_address": "0x00000024",
+     "tag": "PLRAM[3]",
+     "slr": "",
+     "spTag": ""
+    }
+   ],
+   "design_intent": [
+    "dataCenter",
+    "externalHost",
+    "serverManaged"
+   ],
+   "clocks": [
+    {
+     "name": "CPU",
+     "orig_name": "CPU",
+     "id": -1,
+     "default": false,
+     "type": "RESERVED",
+     "spec_frequency": 1,
+     "spec_period": 1000,
+     "requested_frequency": 0,
+     "achieved_frequency": 0,
+     "clock_domain": "",
+     "inst_ref": "",
+     "comp_ref": "",
+     "xclbin_name": ""
+    },
+    {
+     "name": "PL 0",
+     "orig_name": "ulp_ucs_aclk_kernel_00",
+     "id": 0,
+     "default": false,
+     "type": "SCALABLE",
+     "spec_frequency": 300,
+     "spec_period": 3.333333,
+     "requested_frequency": 0,
+     "achieved_frequency": 0,
+     "clock_domain": "",
+     "inst_ref": "",
+     "comp_ref": "",
+     "xclbin_name": ""
+    },
+    {
+     "name": "PL 1",
+     "orig_name": "ulp_ucs_aclk_kernel_01",
+     "id": 1,
+     "default": false,
+     "type": "SCALABLE",
+     "spec_frequency": 500,
+     "spec_period": 2,
+     "requested_frequency": 0,
+     "achieved_frequency": 0,
+     "clock_domain": "",
+     "inst_ref": "",
+     "comp_ref": "",
+     "xclbin_name": ""
+    },
+    {
+     "name": "PL 2",
+     "orig_name": "_bd_top_blp_s_aclk_freerun_ref_00",
+     "id": 2,
+     "default": false,
+     "type": "FIXED",
+     "spec_frequency": 100,
+     "spec_period": 10,
+     "requested_frequency": 0,
+     "achieved_frequency": 0,
+     "clock_domain": "",
+     "inst_ref": "",
+     "comp_ref": "",
+     "xclbin_name": ""
+    }
+   ]
+  },
+  "xclbin": {
+   "generated_by": {
+    "name": "v++",
+    "version": "2022.1",
+    "cl": "3524075",
+    "time_stamp": "2022-04-13-17:42:45",
+    "options": "/opt/Xilinx/Vitis/2022.1/bin/unwrapped/lnx64.o/v++ -l -t sw_emu --platform /opt/xilinx/platforms/xilinx_u50_gen3x16_xdma_5_202210_1/xilinx_u50_gen3x16_xdma_5_202210_1.xpfm --save-temps --config /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/conn_u50.cfg -I /ext --temp_dir _x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1 --report_dir /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/reports/_build.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel --optimize 2 -R 2 --kernel_frequency 300 -o build_dir.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xclbin _x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xo ",
+    "xclbin_name": "Top_Kernel",
+    "uuid": "468e17e6-1c3a-4d7d-bd54-bfdc81318c62",
+    "link_uuid": "468e17e6-1c3a-4d7d-bd54-bfdc81318c62",
+    "package_uuid": "",
+    "system_compile_flow": false
+   },
+   "user_regions": [
+    {
+     "name": "OCL_REGION_0",
+     "type": "clc_region",
+     "instance_path": "level0_i/ulp",
+     "available_resources": {
+      "LUT": "705520",
+      "REG": "1411040",
+      "BRAM": "1116",
+      "DSP": "4920",
+      "by_SLR": [
+       {
+        "name": "SLR0",
+        "LUT": "351840",
+        "REG": "703680",
+        "BRAM": "552",
+        "DSP": "2352",
+        "URAM": "272"
+       },
+       {
+        "name": "SLR1",
+        "LUT": "353680",
+        "REG": "707360",
+        "BRAM": "564",
+        "DSP": "2568",
+        "URAM": "272"
+       }
+      ],
+      "URAM": ""
+     },
+     "kernels": [],
+     "compute_units": [
+      {
+       "id": "0",
+       "kernel_name": "Top_Kernel",
+       "cu_name": "Top_Kernel_1",
+       "base_address": "",
+       "actual_resources": [],
+       "clock_name": "",
+       "clock_id": 0,
+       "clocks": [],
+       "reset_port_name": ""
+      }
+     ],
+     "connectivity": [
+      {
+       "id": "0",
+       "node1": {
+        "type": "compute_unit",
+        "id": "0",
+        "kernel_argument_id": "0",
+        "arg_name": "matrixA",
+        "mode": "Master",
+        "name": "",
+        "port_name": ""
+       },
+       "node2": {
+        "type": "memory",
+        "id": "0",
+        "kernel_argument_id": "",
+        "arg_name": "",
+        "mode": "",
+        "name": "",
+        "port_name": ""
+       }
+      },
+      {
+       "id": "1",
+       "node1": {
+        "type": "compute_unit",
+        "id": "0",
+        "kernel_argument_id": "1",
+        "arg_name": "matrixR",
+        "mode": "Master",
+        "name": "",
+        "port_name": ""
+       },
+       "node2": {
+        "type": "memory",
+        "id": "0",
+        "kernel_argument_id": "",
+        "arg_name": "",
+        "mode": "",
+        "name": "",
+        "port_name": ""
+       }
+      }
+     ]
+    }
+   ]
+  }
+ }
+}
+

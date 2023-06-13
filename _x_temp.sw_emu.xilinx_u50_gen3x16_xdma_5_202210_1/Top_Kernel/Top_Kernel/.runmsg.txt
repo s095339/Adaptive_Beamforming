@@ -1,0 +1,2 @@
+performing high-level synthesis for kernel: Top_Kernel
+Log file: /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/_x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel/Top_Kernel/vitis_hls.log

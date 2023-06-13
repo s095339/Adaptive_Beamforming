@@ -1,0 +1,22 @@
+INFO: [v++ 60-1306] Additional information associated with this v++ link can be found at:
+	Reports: /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/reports/_build.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel/link
+	Log files: /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/_x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/logs/link
+INFO: [v++ 60-1548] Creating build summary session with primary output /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/build_dir.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xclbin.link_summary, at Tue Jun 13 16:00:42 2023
+INFO: [v++ 60-1316] Initiating connection to rulecheck server, at Tue Jun 13 16:00:42 2023
+INFO: [v++ 60-1315] Creating rulecheck session with output '/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/reports/_build.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel/link/v++_link_Top_Kernel_guidance.html', at Tue Jun 13 16:00:43 2023
+INFO: [v++ 60-895]   Target platform: /opt/xilinx/platforms/xilinx_u50_gen3x16_xdma_5_202210_1/xilinx_u50_gen3x16_xdma_5_202210_1.xpfm
+INFO: [v++ 60-1578]   This platform contains Xilinx Shell Archive '/opt/xilinx/platforms/xilinx_u50_gen3x16_xdma_5_202210_1/hw/hw.xsa'
+INFO: [v++ 74-78] Compiler Version string: 2022.1
+INFO: [v++ 60-629] Linking for software emulation target
+INFO: [v++ 60-423]   Target device: xilinx_u50_gen3x16_xdma_5_202210_1
+WARNING: [v++ 60-889] User-specified kernel frequency for ID 0 is the same as the default frequency 300 MHz, so it will be ignored
+INFO: [v++ 60-645] kernel flags are '-I /ext -I /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf'
+INFO: [v++ 60-586] Created build_dir.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xclbin
+INFO: [v++ 60-1307] Run completed. Additional information can be found in:
+	Guidance: /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/reports/_build.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel/link/v++_link_Top_Kernel_guidance.html
+	Steps Log File: /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/_x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/logs/link/link.steps.log
+
+INFO: [v++ 60-2343] Use the vitis_analyzer tool to visualize and navigate the relevant reports. Run the following command. 
+    vitis_analyzer /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/build_dir.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xclbin.link_summary 
+INFO: [v++ 60-791] Total elapsed time: 0h 0m 19s
+INFO: [v++ 60-1653] Closing dispatch client.

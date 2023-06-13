@@ -1,0 +1,180 @@
+<ENTRY>
+{
+ "thisFile": "/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/_x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xo.compile_summary",
+ "connectId": "",
+ "serverToken": "",
+ "timestamp": "0"
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_CmdStep",
+ "dateTimestamp": "Tue Jun 13 16:00:10 2023",
+ "timestampMillis": "1686643210872",
+ "buildStep": {
+  "cmdId": "7a6e02de-d236-4bfa-b566-9c005c2c6fc1",
+  "name": "v++",
+  "logFile": "/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/_x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel/Top_Kernel.steps.log",
+  "commandLine": "/opt/Xilinx/Vitis/2022.1/bin/unwrapped/lnx64.o/v++  --vivado.prop \"run.__KERNEL__.{STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS}={-directive sdx_optimization_effort_high}\" --advanced.misc \"report=type report_timing_summary name impl_report_timing_summary_route_design_summary steps {route_design} runs {impl_1} options {-max_paths 10}\" --advanced.misc \"report=type report_timing_summary name impl_report_timing_summary_post_route_phys_opt_design_summary steps {post_route_phys_opt_design} runs {impl_1} options {-max_paths 10}\" -c -t sw_emu --platform /opt/xilinx/platforms/xilinx_u50_gen3x16_xdma_5_202210_1/xilinx_u50_gen3x16_xdma_5_202210_1.xpfm --save-temps --config /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/conn_u50.cfg -I /ext -k Top_Kernel -I. --temp_dir _x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1 --report_dir /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/reports/_x.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1 -o _x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xo Top_Kernel.cpp ",
+  "args": [
+   "-c",
+   "-t",
+   "sw_emu",
+   "--platform",
+   "/opt/xilinx/platforms/xilinx_u50_gen3x16_xdma_5_202210_1/xilinx_u50_gen3x16_xdma_5_202210_1.xpfm",
+   "--save-temps",
+   "--config",
+   "/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/conn_u50.cfg",
+   "-I",
+   "/ext",
+   "-k",
+   "Top_Kernel",
+   "-I.",
+   "--temp_dir",
+   "_x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1",
+   "--report_dir",
+   "/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/reports/_x.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1",
+   "-o",
+   "_x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xo",
+   "Top_Kernel.cpp"
+  ],
+  "iniFiles": [
+   {
+    "path": "/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/conn_u50.cfg",
+    "content": "[connectivity]\nsp=Top_Kernel_1.matrixA:HBM[0]\nsp=Top_Kernel_1.matrixR:HBM[1]\n"
+   }
+  ],
+  "cwd": "/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Tue Jun 13 16:00:10 2023",
+ "timestampMillis": "1686643210873",
+ "status": {
+  "cmdId": "7a6e02de-d236-4bfa-b566-9c005c2c6fc1",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_FlowMetaData",
+ "dateTimestamp": "Tue Jun 13 16:00:14 2023",
+ "timestampMillis": "1686643214625",
+ "buildSummary": {
+  "hardwarePlatform": "xilinx_u50_gen3x16_xdma_5_202210_1.xpfm",
+  "hardwareDsa": "",
+  "platformDirectory": "/opt/xilinx/platforms/xilinx_u50_gen3x16_xdma_5_202210_1",
+  "runtime": "OpenCL",
+  "systemConfig": "Linux",
+  "flow": "BF_COMPILE",
+  "target": "TT_SW_EMU",
+  "kernels": [
+   {
+    "base": {
+     "type": "KERNEL",
+     "name": "Top_Kernel",
+     "file": "/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/_x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xo",
+     "reports": [],
+     "uuid": ""
+    },
+    "sources": [
+     "/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/Top_Kernel.cpp"
+    ],
+    "psSources": [],
+    "cuNames": [],
+    "type": "HLS",
+    "frequency": 0,
+    "freqUnits": ""
+   }
+  ],
+  "toolVersion": "Vitis V++ Compiler Release 2022.1. SW Build 3524075 on 2022-04-13-17:42:45"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "Tue Jun 13 16:00:14 2023",
+ "timestampMillis": "1686643214631",
+ "buildStep": {
+  "cmdId": "72016e9b-e318-48c4-9713-338921ab4a08",
+  "name": "vitis_hls",
+  "logFile": "/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/_x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel/Top_Kernel/vitis_hls.log",
+  "commandLine": "vitis_hls -f /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/_x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel/Top_Kernel/Top_Kernel.tcl -messageDb vitis_hls.pb",
+  "args": [
+   "vitis_hls",
+   "-f",
+   "/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/_x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel/Top_Kernel/Top_Kernel.tcl",
+   "-messageDb",
+   "vitis_hls.pb"
+  ],
+  "iniFiles": [],
+  "cwd": "/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Tue Jun 13 16:00:14 2023",
+ "timestampMillis": "1686643214632",
+ "status": {
+  "cmdId": "72016e9b-e318-48c4-9713-338921ab4a08",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Tue Jun 13 16:00:31 2023",
+ "timestampMillis": "1686643231156",
+ "status": {
+  "cmdId": "72016e9b-e318-48c4-9713-338921ab4a08",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Tue Jun 13 16:00:31 2023",
+ "timestampMillis": "1686643231280",
+ "report": {
+  "path": "/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/reports/_x.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel/v++_compile_Top_Kernel_guidance.html",
+  "name": "",
+  "fileType": "HTML",
+  "reportType": "GLOBAL_RULECHECK_GUIDANCE",
+  "cmdId": ""
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Tue Jun 13 16:00:31 2023",
+ "timestampMillis": "1686643231281",
+ "report": {
+  "path": "/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/_x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/v++_compile_Top_Kernel_guidance.pb",
+  "name": "",
+  "fileType": "BINARY_PROTOBUF",
+  "reportType": "GLOBAL_RULECHECK_GUIDANCE",
+  "cmdId": ""
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Tue Jun 13 16:00:31 2023",
+ "timestampMillis": "1686643231285",
+ "status": {
+  "cmdId": "7a6e02de-d236-4bfa-b566-9c005c2c6fc1",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>

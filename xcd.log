@@ -1,0 +1,62 @@
+Tue Jun 13 16:00:01 2023: Running xcd server. This server was built by gradle.
+Tue Jun 13 16:00:01 2023: Server was asked to start on port: '36735'
+Tue Jun 13 16:00:01 2023: Server is using token UUID: 'c85a9540-310d-4ba5-b8c3-f73c6c901444'
+Tue Jun 13 16:00:01 2023: SESSION_MGR: creating session with session uuid: '6d04a3e9-ade5-4ab9-8d63-1f78fcd2ec76' and name 'default'
+Tue Jun 13 16:00:01 2023: Attempting to start server on port '36735'
+Tue Jun 13 16:00:01 2023: XCD main fifo: created main fifo '/tmp/xcdmainc85a9540-310d-4ba5-b8c3-f73c6c901444', fd read = 13
+Tue Jun 13 16:00:01 2023: Running Dispatch Server
+Tue Jun 13 16:00:01 2023: Version 2.2.0
+Tue Jun 13 16:00:10 2023: Dispatch Server: Accepted socket connection from client
+Tue Jun 13 16:00:10 2023: Starting Socket connection
+Tue Jun 13 16:00:10 2023: EXCHANGE_TOKEN received, server token: c85a9540-310d-4ba5-b8c3-f73c6c901444, passed token: c85a9540-310d-4ba5-b8c3-f73c6c901444
+Tue Jun 13 16:00:11 2023: DISPATCH_HANDLER: Adding handler from function makeHandler in library libxv_system_diagram
+Tue Jun 13 16:00:11 2023: SESSION_MGR: creating session with session uuid: 'fe9cb20d-8c5f-4214-b83f-b589999e67c2' and name 'v++_compile_Top_Kernel'
+Tue Jun 13 16:00:11 2023: KERNEL_SVC: creating session with uuid: 'fe9cb20d-8c5f-4214-b83f-b589999e67c2' and name 'v++_compile_Top_Kernel'
+Tue Jun 13 16:00:11 2023: GUIDANCE_SMGR: creating guidance session with uuid: 'fe9cb20d-8c5f-4214-b83f-b589999e67c2' and name 'v++_compile_Top_Kernel'
+Tue Jun 13 16:00:11 2023: SYSTEM_DIAGRAM: creating session with uuid: 'fe9cb20d-8c5f-4214-b83f-b589999e67c2' and name 'v++_compile_Top_Kernel'
+Tue Jun 13 16:00:31 2023: SESSION_MGR: closing session for UUID 'fe9cb20d-8c5f-4214-b83f-b589999e67c2' with name 'v++_compile_Top_Kernel'
+Tue Jun 13 16:00:31 2023: KERNEL_SVC: closing session for UUID 'fe9cb20d-8c5f-4214-b83f-b589999e67c2' with name 'v++_compile_Top_Kernel'
+Tue Jun 13 16:00:31 2023: GUIDANCE_SMGR: closing session for UUID 'fe9cb20d-8c5f-4214-b83f-b589999e67c2' with name 'v++_compile_Top_Kernel'
+Tue Jun 13 16:00:31 2023: SYSTEM_DIAGRAM: closing session for UUID 'fe9cb20d-8c5f-4214-b83f-b589999e67c2' with name 'v++_compile_Top_Kernel'
+Tue Jun 13 16:00:31 2023: STOP_SERVER received, server token: c85a9540-310d-4ba5-b8c3-f73c6c901444, passed token: c85a9540-310d-4ba5-b8c3-f73c6c901444
+Tue Jun 13 16:00:31 2023: Socket received request to stop server.
+Tue Jun 13 16:00:31 2023: Dispatch Server: do_await_stop
+Tue Jun 13 16:00:31 2023: Dispatch Server: stopping mainFifo_
+Tue Jun 13 16:00:31 2023: XCD main fifo: Stopping
+Tue Jun 13 16:00:31 2023: XCD main fifo: do_read error code: Operation canceled
+Tue Jun 13 16:00:31 2023: XCD main fifo: bytes_transferred: 0
+Tue Jun 13 16:00:31 2023: SERVER: destructor for server bound to port 36735
+Tue Jun 13 16:00:31 2023: XCD main fifo: Good unlink of /tmp/xcdmainc85a9540-310d-4ba5-b8c3-f73c6c901444
+Tue Jun 13 16:00:31 2023: Server exiting with status 0.
+Tue Jun 13 16:00:31 2023: Closing log file.
+Tue Jun 13 16:00:32 2023: Running xcd server. This server was built by gradle.
+Tue Jun 13 16:00:32 2023: Server was asked to start on port: '44253'
+Tue Jun 13 16:00:32 2023: Server is using token UUID: 'f8c37e97-663b-4410-8775-01aff13f8216'
+Tue Jun 13 16:00:32 2023: SESSION_MGR: creating session with session uuid: '6d04a3e9-ade5-4ab9-8d63-1f78fcd2ec76' and name 'default'
+Tue Jun 13 16:00:32 2023: Attempting to start server on port '44253'
+Tue Jun 13 16:00:32 2023: XCD main fifo: created main fifo '/tmp/xcdmainf8c37e97-663b-4410-8775-01aff13f8216', fd read = 13
+Tue Jun 13 16:00:32 2023: Running Dispatch Server
+Tue Jun 13 16:00:32 2023: Version 2.2.0
+Tue Jun 13 16:00:42 2023: Dispatch Server: Accepted socket connection from client
+Tue Jun 13 16:00:42 2023: Starting Socket connection
+Tue Jun 13 16:00:42 2023: EXCHANGE_TOKEN received, server token: f8c37e97-663b-4410-8775-01aff13f8216, passed token: f8c37e97-663b-4410-8775-01aff13f8216
+Tue Jun 13 16:00:42 2023: DISPATCH_HANDLER: Adding handler from function makeHandler in library libxv_system_diagram
+Tue Jun 13 16:00:42 2023: SESSION_MGR: creating session with session uuid: '2b1e9e47-48b7-4d44-b5e5-b0e215cca882' and name 'v++_link_Top_Kernel'
+Tue Jun 13 16:00:42 2023: KERNEL_SVC: creating session with uuid: '2b1e9e47-48b7-4d44-b5e5-b0e215cca882' and name 'v++_link_Top_Kernel'
+Tue Jun 13 16:00:42 2023: GUIDANCE_SMGR: creating guidance session with uuid: '2b1e9e47-48b7-4d44-b5e5-b0e215cca882' and name 'v++_link_Top_Kernel'
+Tue Jun 13 16:00:42 2023: SYSTEM_DIAGRAM: creating session with uuid: '2b1e9e47-48b7-4d44-b5e5-b0e215cca882' and name 'v++_link_Top_Kernel'
+Tue Jun 13 16:00:52 2023: SESSION_MGR: closing session for UUID '2b1e9e47-48b7-4d44-b5e5-b0e215cca882' with name 'v++_link_Top_Kernel'
+Tue Jun 13 16:00:52 2023: KERNEL_SVC: closing session for UUID '2b1e9e47-48b7-4d44-b5e5-b0e215cca882' with name 'v++_link_Top_Kernel'
+Tue Jun 13 16:00:52 2023: GUIDANCE_SMGR: closing session for UUID '2b1e9e47-48b7-4d44-b5e5-b0e215cca882' with name 'v++_link_Top_Kernel'
+Tue Jun 13 16:00:52 2023: SYSTEM_DIAGRAM: closing session for UUID '2b1e9e47-48b7-4d44-b5e5-b0e215cca882' with name 'v++_link_Top_Kernel'
+Tue Jun 13 16:00:52 2023: STOP_SERVER received, server token: f8c37e97-663b-4410-8775-01aff13f8216, passed token: f8c37e97-663b-4410-8775-01aff13f8216
+Tue Jun 13 16:00:52 2023: Socket received request to stop server.
+Tue Jun 13 16:00:52 2023: Dispatch Server: do_await_stop
+Tue Jun 13 16:00:52 2023: Dispatch Server: stopping mainFifo_
+Tue Jun 13 16:00:52 2023: XCD main fifo: Stopping
+Tue Jun 13 16:00:52 2023: XCD main fifo: do_read error code: Operation canceled
+Tue Jun 13 16:00:52 2023: XCD main fifo: bytes_transferred: 0
+Tue Jun 13 16:00:52 2023: SERVER: destructor for server bound to port 44253
+Tue Jun 13 16:00:52 2023: XCD main fifo: Good unlink of /tmp/xcdmainf8c37e97-663b-4410-8775-01aff13f8216
+Tue Jun 13 16:00:52 2023: Server exiting with status 0.
+Tue Jun 13 16:00:52 2023: Closing log file.

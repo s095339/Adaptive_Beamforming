@@ -1,0 +1,111 @@
+{
+    "schema_version": {
+        "major": "1",
+        "minor": "0",
+        "patch": "0"
+    },
+    "build_metadata": {
+        "dsa": {
+            "vendor": "xilinx",
+            "board_id": "u50",
+            "name": "gen3x16_xdma_5",
+            "version_major": "202210",
+            "version_minor": "1",
+            "description": "",
+            "generated_by": {
+                "name": "Vivado",
+                "version": "2022.1",
+                "cl": "3481164",
+                "time_stamp": "Thu Mar  3 20:48:35 2022"
+            },
+            "board": {
+                "name": "xilinx.com:au50:1.1",
+                "vendor": "xilinx.com",
+                "part": "xcu50-fsvh2104-2-e",
+                "board_part": "xilinx.com:au50:part0:1.1"
+            },
+            "feature_roms": [
+                {
+                    "time_epoch": "0"
+                }
+            ]
+        },
+        "xclbin": {
+            "generated_by": {
+                "name": "v++",
+                "version": "2022.1",
+                "cl": "3524075",
+                "time_stamp": "2022-04-13-17:42:45",
+                "options": "\/opt\/Xilinx\/Vitis\/2022.1\/bin\/unwrapped\/lnx64.o\/v++ --config \/mnt\/HLSNAS\/04.HPOmGn\/m111061549\/BeamFormer\/geqrf\/conn_u50.cfg --connectivity.sp Top_Kernel_1.matrixA:HBM[0] --connectivity.sp Top_Kernel_1.matrixR:HBM[1] --include \/ext --input_files _x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1\/Top_Kernel.xo --kernel_frequency 300 --link --optimize 2 --output build_dir.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1\/Top_Kernel.xclbin --platform \/opt\/xilinx\/platforms\/xilinx_u50_gen3x16_xdma_5_202210_1\/xilinx_u50_gen3x16_xdma_5_202210_1.xpfm --report_dir \/mnt\/HLSNAS\/04.HPOmGn\/m111061549\/BeamFormer\/geqrf\/reports\/_build.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1\/Top_Kernel --report_level 2 --save-temps --target sw_emu --temp_dir _x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1 "
+            },
+            "user_regions": [
+                {
+                    "name": "OCL_REGION_0",
+                    "type": "clc_region",
+                    "instance_path": "level0_i\/ulp",
+                    "base_address": "",
+                    "kernels": [
+                        {
+                            "name": "Top_Kernel",
+                            "ports": [
+                                {
+                                    "name": "M_AXI_GMEM0",
+                                    "mode": "master",
+                                    "range": "0xFFFFFFFF",
+                                    "data_width": "64",
+                                    "port_type": "addressable",
+                                    "base": "0x0"
+                                },
+                                {
+                                    "name": "M_AXI_GMEM",
+                                    "mode": "master",
+                                    "range": "0xFFFFFFFF",
+                                    "data_width": "64",
+                                    "port_type": "addressable",
+                                    "base": "0x0"
+                                },
+                                {
+                                    "name": "S_AXI_CONTROL",
+                                    "mode": "slave",
+                                    "range": "0x28",
+                                    "data_width": "32",
+                                    "port_type": "addressable",
+                                    "base": "0x0"
+                                }
+                            ],
+                            "arguments": [
+                                {
+                                    "name": "matrixA",
+                                    "address_qualifier": "1",
+                                    "id": "0",
+                                    "port": "M_AXI_GMEM0",
+                                    "size": "0x8",
+                                    "offset": "0x10",
+                                    "host_offset": "0x0",
+                                    "host_size": "0x8",
+                                    "type": "void*"
+                                },
+                                {
+                                    "name": "matrixR",
+                                    "address_qualifier": "1",
+                                    "id": "1",
+                                    "port": "M_AXI_GMEM",
+                                    "size": "0x8",
+                                    "offset": "0x1C",
+                                    "host_offset": "0x0",
+                                    "host_size": "0x8",
+                                    "type": "void*"
+                                }
+                            ],
+                            "instances": [
+                                {
+                                    "name": "Top_Kernel_1"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
