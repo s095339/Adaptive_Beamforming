@@ -28,7 +28,7 @@
 //#include "matrixUtility.hpp"
 
 //user code
-#include "utils.hpp"
+#include "ext/utils.hpp"
 // Memory alignment
 template <typename T>
 T* aligned_alloc(std::size_t num) {
@@ -153,25 +153,12 @@ int main(int argc, const char* argv[]) {
                                          // Note that this needs to be maximally-sized to support the largest
                                          // Q, otherwise we get strange LAPACK results when ROWS > COLS
 
-    //std::complex<float> Q[numRow][numRow] = {0};          // The Q result from the DUT
-    //std::complex<float> Q_expected[numRow][numRow] = {0}; // The Q result from LAPACK in target format
-
-    //std::complex<float> R[numRow][numCol] = {0};          // The R result from the DUT
-    //std::complex<float> R_expected[numRow][numCol] = {0}; // The R result from LAPACK in target format
-
-    //std::complex<float> I[numRow][numRow] = {0}; // The identity matrix to compare against
-
-
     std::string base_path = "./data/";
     std::string file_A =
         base_path + "A_matType_" + std::to_string(1) + "_" + std::to_string(0) + ".txt";
-    //std::string file_Q =
-    //    base_path + "Q_matType_" + std::to_string(1) + "_" + std::to_string(0) + ".txt";
-    //std::string file_R =
-    //    base_path + "R_matType_" + std::to_string(1) + "_" + std::to_string(0) + ".txt";
+   
     std::cout <<"read file: "<< file_A << std::endl;
-    //std::cout <<"read file: " << file_Q << std::endl;
-    //std::cout <<"read file: " << file_R << std::endl;
+    
 
     std::complex<float>* A_ptr = reinterpret_cast<std::complex<float>*>(A);
     //std::complex<float>* Q_ptr = reinterpret_cast<std::complex<float>*>(Q_expected);
@@ -271,35 +258,6 @@ int main(int argc, const char* argv[]) {
     std::cout << "printout  R matrix" << std::endl;
     for(int j=0;j<100;j++)
         std::cout << dataR_qrd[j] << std::endl; 
-    //for(int i =0; i<1000 ; i++)
-    //    std::cout<< dataA_qrd[i]<<std::endl;    
-    // Calculate A_out = Q*R and compare with original A matrix
-    /*
-    std::complex<float>* Q = new std::complex<float>[numRow * numRow];
-    
-    constructQ<std::complex<float>>(dataA_qrd, tau_qrd, numRow, numCol, Q);
 
-    convertToRInline<std::complex<float>>(dataA_qrd, numRow, numCol);
-
-    std::complex<float>* A = new std::complex<float>[numRow * numCol];
     
-    
-    matrixMult<std::complex<float>>(Q, numRow, numRow, dataA_qrd, numRow, numCol, A);
-
-    bool equal = compareMatrices<std::complex<float>>(A, dataA, numRow, numCol, numCol);
-    for (int i = 0; i < in_size; ++i) {
-        std::cout << dataA[i] << ":" << A[i] << std::endl;
-    }
-    if (equal) {
-        logger.info(xf::common::utils_sw::Logger::Message::TEST_PASS);
-    } else {
-        logger.error(xf::common::utils_sw::Logger::Message::TEST_FAIL);
-    }
-    
-    // Delete created buffers
-    delete[] A;
-    delete[] Q;
-
-    delete[] dataA;
-    */
 }

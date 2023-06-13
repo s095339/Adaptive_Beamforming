@@ -89,9 +89,9 @@ RUN_DEPS :=
 
 # get global setting
 ifeq ($(HOST_ARCH), x86)
-CXXFLAGS += -fmessage-length=0 -I$(CUR_DIR)/src/ -I$(XILINX_XRT)/include -I$(XILINX_HLS)/include -std=c++14 -O3 -Wall -Wno-unknown-pragmas -Wno-unused-label 
+CXXFLAGS += -fmessage-length=0  -I$(XILINX_XRT)/include -I$(XILINX_HLS)/include -std=c++14 -O3 -Wall -Wno-unknown-pragmas -Wno-unused-label 
 LDFLAGS += -pthread -L$(XILINX_XRT)/lib -L$(XILINX_HLS)/lnx64/tools/fpo_v7_1 -Wl,--as-needed -lOpenCL -lxrt_coreutil -lgmp -lmpfr #-lIp_floating_point_v7_1_bitacc_cmodel 
-VPP_FLAGS += -t $(TARGET) --platform $(XPLATFORM) --save-temps 
+VPP_FLAGS += -t $(TARGET)  --platform $(XPLATFORM) --save-temps 
 VPP_LDFLAGS += --optimize 2 -R 2 
 else ifeq ($(HOST_ARCH), aarch64)
 CXXFLAGS += -I$(CUR_DIR)/src/ -fmessage-length=0 --sysroot=$(SYSROOT)  -I$(SYSROOT)/usr/include/xrt -I$(XILINX_HLS)/include -std=c++14 -O3 -Wall -Wno-unknown-pragmas -Wno-unused-label 
@@ -148,15 +148,15 @@ endif
 
 ########################## Kernel compiler global settings ##########################
 ifneq (,$(shell echo $(XPLATFORM) | awk '/u250/'))
-VPP_FLAGS +=   --config $(CUR_DIR)/conn_u250.cfg
+VPP_FLAGS +=   --config $(CUR_DIR)/config/conn_u250.cfg
 VPP_FLAGS +=  -I $(XFLIB_DIR)/L2/include -I $(XFLIB_DIR)/ext -I $(XFLIB_DIR)/L1/include -I $(XFLIB_DIR)/L2/include
 
 else ifneq (,$(shell echo $(XPLATFORM) | awk '/u200/'))
-VPP_FLAGS +=   --config $(CUR_DIR)/conn_u200.cfg
+VPP_FLAGS +=   --config $(CUR_DIR)/config/conn_u200.cfg
 VPP_FLAGS +=  -I $(XFLIB_DIR)/L2/include -I $(XFLIB_DIR)/ext -I $(XFLIB_DIR)/L1/include -I $(XFLIB_DIR)/L2/include
 
 else ifneq (,$(shell echo $(XPLATFORM) | awk '/u50/'))
-VPP_FLAGS +=   --config $(CUR_DIR)/conn_u50.cfg
+VPP_FLAGS +=   --config $(CUR_DIR)/config/conn_u50.cfg
 VPP_FLAGS +=   -I /ext #-I $(XFLIB_DIR)/L1/include -I $(XFLIB_DIR)/L2/include -I $(XFLIB_DIR)/L2/include
 
 else 
@@ -184,7 +184,7 @@ endif
 $(TEMP_DIR)/Top_Kernel.xo: Top_Kernel.cpp 
 	$(ECHO) "Compiling Kernel: Top_Kernel"
 	mkdir -p $(TEMP_DIR)
-	$(VPP) -c $(VPP_FLAGS_Top_Kernel) $(VPP_FLAGS) -k Top_Kernel -I'$(<D)' --temp_dir $(TEMP_DIR) --report_dir $(TEMP_REPORT_DIR) -o $@ $^
+	$(VPP) -c $(VPP_FLAGS_Top_Kernel) $(VPP_FLAGS) -k Top_Kernel -I'$(<D)' --temp_dir $(TEMP_DIR) --report_dir $(TEMP_REPORT_DIR) -o $@ $^ 
 BINARY_CONTAINER_Top_Kernel_OBJS += $(TEMP_DIR)/Top_Kernel.xo
 BINARY_CONTAINERS_DEPS += $(BINARY_CONTAINER_Top_Kernel_OBJS)
 $(BINARY_CONTAINERS): $(BINARY_CONTAINERS_DEPS)
@@ -278,7 +278,7 @@ mkflag:
 	rm -rf $(BUILD_DIR)/makefile_args.txt
 	@for var in $(MAKEFLAGS); do echo $$var >> $(BUILD_DIR)/makefile_args.txt; done
 
-all: check_device check_vpp check_platform mkflag $(RUN_DEPS)
+all: check_device check_vpp check_platform  mkflag $(RUN_DEPS)
 
 run: all
 #hw_emu

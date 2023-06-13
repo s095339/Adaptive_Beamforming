@@ -51,8 +51,8 @@ void Master2Stream(MATRIX_IN_T* matrixA,
     const unsigned int colA) 
 {
 
-  for(unsigned int i = 0; i < rowA*colA; i++) {
-    #pragma HLS LOOP_TRIPCOUNT min = rowA*colA max = rowA*colA
+  for(unsigned int i = 0; i < 1000; i++) {
+    #pragma HLS LOOP_TRIPCOUNT min = 1000 max = 1000
     matrixAStrm.write(matrixA[i]);
   }
 }
@@ -78,7 +78,7 @@ void qrf_transpose(
     ) 
 {
  
-  MATRIX_OUT_T tempQ, tempR,temp;
+  MATRIX_OUT_T tempQ, tempQ_delay, tempR,tempR_delay,temp;
 
   unsigned int r,c;
   r=0;
@@ -100,6 +100,8 @@ void qrf_transpose(
       temp = std::conj(tempR);
       matrixR_trans_conj[c][r] = (r>c)? 0:temp;
       //std::cout<<temp<<std::endl;
+    }else{
+      tempR_delay = tempR;
     }
     //-----------------------------------------
   }
@@ -109,6 +111,7 @@ void qrf_transpose(
     #pragma HLS LOOP_TRIPCOUNT min = rowQ*colQ max = rowQ*colQ
     #pragma HLS PIPELINE
     tempQ = matrixQStrm.read();
+    tempQ_delay = tempQ;
   }
 }
 
@@ -128,29 +131,41 @@ void pass_dataflow(
   //#pragma HLS DATAFLOW
 
   //std::cout<< "0" <<std::endl;
-  static hls::stream<MATRIX_IN_T> matrixAStrm;
-  static hls::stream<MATRIX_OUT_T> matrixQStrm;
-  static hls::stream<MATRIX_OUT_T> matrixRStrm;
+  static hls::stream<MATRIX_IN_T,1000> matrixAStrm;
+  static hls::stream<MATRIX_OUT_T,10000> matrixQStrm;
+  static hls::stream<MATRIX_OUT_T,1000> matrixRStrm;
+  //static hls::stream<MATRIX_OUT_T> matrixLstrm;
   MATRIX_OUT_T matrixR_trans_conj[10][10];  //10X10 matrix
-
-
+  
+  //Turn the 2Darray MatrixA  sent from host to kernel by axi_master to the hls:stream type 
   Master2Stream(matrixA, matrixAStrm, rowA, colA);
   
-
+  //Vitis Library QR Factorization-------------- 
   QRF(matrixAStrm,  matrixQStrm, matrixRStrm);
   
 
   qrf_transpose(matrixQStrm,matrixRStrm,matrixR_trans_conj, 
                  rowQ, colQ, rowR, colR);
-
+  //Turn the 2D R(transposed conjugated matrix) to the 1D matrix
+  //Turn the 2D R(transposed conjugated matrix) to the Stream
   unsigned int k=0;
   for(unsigned int r=0; r<10; r++){
     for(unsigned int c=0; c<10; c++){
-      matrixR[k] = matrixR_trans_conj[r][c];
-      //std::cout<<matrixR[k]<<std::endl;
+      #pragma PIPELINE
+      MATRIX_OUT_T temp;
+      temp = matrixR_trans_conj[r][c]; // Set a temp to avoid RAW to apply the pipeline
+      matrixR[k] = temp;
+      //matrixLstrm.write(temp);
       k++;
     }
   }
+
+  //add your kernel---------------------------------------------------
+  //param 
+  //static hls::stream<MATRIX_OUT_T> matrixLstrm;
+  //
+  //
+
   //std::cout<< "4" <<std::endl;
 }
 
@@ -158,6 +173,7 @@ void pass_dataflow(
 
 extern "C" void Top_Kernel(
     MATRIX_IN_T matrixA[1000],
+    
     //hls::x_complex<double> matrixQ[100*100],
     MATRIX_OUT_T matrixR[100]
     ) 

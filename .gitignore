@@ -1,0 +1,4 @@
+*.log
+./_x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1
+./.Xil
+./build_dir.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1

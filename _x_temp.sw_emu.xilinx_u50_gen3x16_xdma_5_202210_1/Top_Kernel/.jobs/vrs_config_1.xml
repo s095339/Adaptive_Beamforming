@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<Runs Version="1" Minor="0">
-	<Run Id="Top_Kernel" LaunchDir="/mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/geqrf/_x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel/Top_Kernel" FlowId="Build_IP" FromStepId="vitis_hls" ToStepId="vitis_hls"/>
-</Runs>
-
