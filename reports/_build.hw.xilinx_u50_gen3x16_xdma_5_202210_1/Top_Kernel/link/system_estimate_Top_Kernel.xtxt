@@ -1,0 +1,78 @@
+===============================================================================
+Version:    v++ v2022.1 (64-bit)
+Build:      SW Build 3524075 on 2022-04-13-17:42:45
+Copyright:  Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Created:    Wed Jun 14 12:18:27 2023
+===============================================================================
+
+-------------------------------------------------------------------------------
+Design Name:             Top_Kernel
+Target Device:           xilinx:u50:gen3x16_xdma_5:202210.1
+Target Clock:            300.000000MHz
+Total number of kernels: 1
+-------------------------------------------------------------------------------
+
+Kernel Summary
+Kernel Name  Type  Target              OpenCL Library  Compute Units
+-----------  ----  ------------------  --------------  -------------
+Top_Kernel   c     fpga0:OCL_REGION_0  Top_Kernel      1
+
+
+-------------------------------------------------------------------------------
+OpenCL Binary:     Top_Kernel
+Kernels mapped to: clc_region
+
+Timing Information (MHz)
+Compute Unit  Kernel Name  Module Name                                                               Target Frequency  Estimated Frequency
+------------  -----------  ------------------------------------------------------------------------  ----------------  -------------------
+Top_Kernel_1  Top_Kernel   Top_Kernel_Pipeline_VITIS_LOOP_54_1                                       300.300293        411.015198
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_complex_float_Pipeline_1       300.300293        496.770996
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_complex_float_Pipeline_2       300.300293        519.48053
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_complex_Pipeline_col_copy_q_i  300.300293        413.736023
+Top_Kernel_1  Top_Kernel   qrf_givens_float_s                                                        300.300293        426.075867
+Top_Kernel_1  Top_Kernel   qrf_alt_Pipeline_calc_rotations                                           300.300293        426.075867
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_complex_Pipeline_update_q      300.300293        426.985474
+Top_Kernel_1  Top_Kernel   qrf_alt_Pipeline_col_assign_loop                                          300.300293        413.736023
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_float_complex_float_s          300.300293        413.736023
+Top_Kernel_1  Top_Kernel   qrf_transpose_Pipeline_VITIS_LOOP_86_1                                    300.300293        489.236816
+Top_Kernel_1  Top_Kernel   qrf_transpose_Pipeline_VITIS_LOOP_109_2                                   300.300293        821.692688
+Top_Kernel_1  Top_Kernel   qrf_transpose                                                             300.300293        489.236816
+Top_Kernel_1  Top_Kernel   Top_Kernel_Pipeline_VITIS_LOOP_152_1_VITIS_LOOP_153_2                     300.300293        411.015198
+Top_Kernel_1  Top_Kernel   Top_Kernel                                                                300.300293        411.015198
+
+Latency Information
+Compute Unit  Kernel Name  Module Name                                                               Start Interval  Best (cycles)  Avg (cycles)  Worst (cycles)  Best (absolute)  Avg (absolute)  Worst (absolute)
+------------  -----------  ------------------------------------------------------------------------  --------------  -------------  ------------  --------------  ---------------  --------------  ----------------
+Top_Kernel_1  Top_Kernel   Top_Kernel_Pipeline_VITIS_LOOP_54_1                                       1003            1003           1003          1003            3.343 us         3.343 us        3.343 us
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_complex_float_Pipeline_1       102             102            102           102             0.340 us         0.340 us        0.340 us
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_complex_float_Pipeline_2       506             506            506           506             1.686 us         1.686 us        1.686 us
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_complex_Pipeline_col_copy_q_i  102             102            102           102             0.340 us         0.340 us        0.340 us
+Top_Kernel_1  Top_Kernel   qrf_givens_float_s                                                        1               62             62            62              0.207 us         0.207 us        0.207 us
+Top_Kernel_1  Top_Kernel   qrf_alt_Pipeline_calc_rotations                                           69 ~ 118        69             93            118             0.230 us         0.310 us        0.393 us
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_complex_Pipeline_update_q      421             421            421           421             1.403 us         1.403 us        1.403 us
+Top_Kernel_1  Top_Kernel   qrf_alt_Pipeline_col_assign_loop                                          103             103            103           103             0.343 us         0.343 us        0.343 us
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_float_complex_float_s          32124 ~ 633256  32124          undef         633256          0.107 ms         undef           2.111 ms
+Top_Kernel_1  Top_Kernel   qrf_transpose_Pipeline_VITIS_LOOP_86_1                                    1002            1002           1002          1002            3.340 us         3.340 us        3.340 us
+Top_Kernel_1  Top_Kernel   qrf_transpose_Pipeline_VITIS_LOOP_109_2                                   10002           10002          10002         10002           33.337 us        33.337 us       33.337 us
+Top_Kernel_1  Top_Kernel   qrf_transpose                                                             11008           11008          11008         11008           36.690 us        36.690 us       36.690 us
+Top_Kernel_1  Top_Kernel   Top_Kernel_Pipeline_VITIS_LOOP_152_1_VITIS_LOOP_153_2                     103             103            103           103             0.343 us         0.343 us        0.343 us
+Top_Kernel_1  Top_Kernel   Top_Kernel                                                                44385 ~ 645517  44384          undef         645516          0.148 ms         undef           2.152 ms
+
+Area Information
+Compute Unit  Kernel Name  Module Name                                                               FF     LUT    DSP  BRAM  URAM
+------------  -----------  ------------------------------------------------------------------------  -----  -----  ---  ----  ----
+Top_Kernel_1  Top_Kernel   Top_Kernel_Pipeline_VITIS_LOOP_54_1                                       979    121    0    0     0
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_complex_float_Pipeline_1       9      72     0    0     0
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_complex_float_Pipeline_2       29     369    0    0     0
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_complex_Pipeline_col_copy_q_i  15     177    0    0     0
+Top_Kernel_1  Top_Kernel   qrf_givens_float_s                                                        13142  2140   0    0     0
+Top_Kernel_1  Top_Kernel   qrf_alt_Pipeline_calc_rotations                                           13655  2494   0    3     0
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_complex_Pipeline_update_q      5733   3079   0    0     0
+Top_Kernel_1  Top_Kernel   qrf_alt_Pipeline_col_assign_loop                                          99     204    0    0     0
+Top_Kernel_1  Top_Kernel   qrf_alt_false_100_10_my_qrf_traits_complex_float_complex_float_s          21905  8738   0    39    0
+Top_Kernel_1  Top_Kernel   qrf_transpose_Pipeline_VITIS_LOOP_86_1                                    55     320    0    0     0
+Top_Kernel_1  Top_Kernel   qrf_transpose_Pipeline_VITIS_LOOP_109_2                                   17     82     0    0     0
+Top_Kernel_1  Top_Kernel   qrf_transpose                                                             79     451    0    0     0
+Top_Kernel_1  Top_Kernel   Top_Kernel_Pipeline_VITIS_LOOP_152_1_VITIS_LOOP_153_2                     216    319    0    0     0
+Top_Kernel_1  Top_Kernel   Top_Kernel                                                                30103  21952  0    39    0
+-------------------------------------------------------------------------------
