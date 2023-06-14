@@ -46,9 +46,9 @@ struct my_qrf_traits : xf::solver::qrfTraits {
 };
 
 void Master2Stream(MATRIX_IN_T* matrixA,
-	  hls::stream<MATRIX_IN_T,1000>& matrixAStrm,
+	  hls::stream<MATRIX_IN_T>& matrixAStrm,
     MATRIX_IN_T* Vs,
-    hls::stream<MATRIX_IN_T,10>& VsStrm,
+    hls::stream<MATRIX_IN_T>& VsStrm,
 	  const unsigned int rowA,
     const unsigned int colA) 
 {
@@ -65,9 +65,9 @@ void Master2Stream(MATRIX_IN_T* matrixA,
   }
 }
 
-void QRF(   hls::stream<MATRIX_IN_T,1000>& matrixAStrm,
-	        hls::stream<MATRIX_OUT_T,10000>& matrixQStrm,
-            hls::stream<MATRIX_OUT_T,1000>& matrixRStrm
+void QRF(   hls::stream<MATRIX_IN_T>& matrixAStrm,
+	        hls::stream<MATRIX_OUT_T>& matrixQStrm,
+            hls::stream<MATRIX_OUT_T>& matrixRStrm
             
 	    ) 
       
@@ -76,8 +76,8 @@ void QRF(   hls::stream<MATRIX_IN_T,1000>& matrixAStrm,
 }
 
 void qrf_transpose(     
-  hls::stream<MATRIX_OUT_T,10000>& matrixQStrm,
-	hls::stream<MATRIX_OUT_T,1000>& matrixRStrm,
+  hls::stream<MATRIX_OUT_T>& matrixQStrm,
+	hls::stream<MATRIX_OUT_T>& matrixRStrm,
   
 	//hls::x_complex<double>* matrixQ,
     MATRIX_OUT_T matrixR_trans_conj[][10],
@@ -147,7 +147,7 @@ void pass_dataflow(
   static hls::stream<MATRIX_OUT_T> matrixRStrm;
   static hls::stream<MATRIX_IN_T,10> VsStrm;
   //static hls::stream<MATRIX_OUT_T> matrixLstrm;
-  MATRIX_OUT_T matrixR[10][10];  //10X10 matrix
+  MATRIX_OUT_T matrixR_trans_conj[10][10];  //10X10 matrix
   MATRIX_IN_T temp_VS;
   //Turn the 2Darray MatrixA  sent from host to kernel by axi_master to the hls:stream type 
   Master2Stream(matrixA, matrixAStrm,Vs,VsStrm, rowA, colA);
@@ -156,7 +156,7 @@ void pass_dataflow(
   QRF(matrixAStrm,  matrixQStrm, matrixRStrm);
   
 
-  qrf_transpose(matrixQStrm,matrixRStrm,matrixR, 
+  qrf_transpose(matrixQStrm,matrixRStrm,matrixR_trans_conj, 
                  rowQ, colQ, rowR, colR);
   //Turn the 2D R(transposed conjugated matrix) to the 1D matrix
   //Turn the 2D R(transposed conjugated matrix) to the Stream
