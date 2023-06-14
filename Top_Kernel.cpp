@@ -145,7 +145,7 @@ void pass_dataflow(
   static hls::stream<MATRIX_IN_T> matrixAStrm;
   static hls::stream<MATRIX_OUT_T> matrixQStrm;
   static hls::stream<MATRIX_OUT_T> matrixRStrm;
-  static hls::stream<MATRIX_IN_T> VsStrm
+  static hls::stream<MATRIX_IN_T> VsStrm;
   //static hls::stream<MATRIX_OUT_T> matrixLstrm;
   MATRIX_OUT_T matrixR_trans_conj[10][10];  //10X10 matrix
   

@@ -200,7 +200,7 @@ int main(int argc, const char* argv[]) {
     // mext_o[0].obj = tau_qrd;
     // mext_o[0].param = 0;
     mext_A[0] = {0, dataA_qrd, Top_Kernel()};
-    mext_Vs[0] = {1, dataQ_qrd, Top_Kernel()};
+    mext_Vs[0] = {1, dataVs_qrd, Top_Kernel()};
     mext_R[0] = {2, dataR_qrd, Top_Kernel()};
     // Create device buffer and map dev buf to host buf
     std::vector<cl::Buffer> input_buffer(1),input_Vs_buffer(1), output_buffer_R(1);
