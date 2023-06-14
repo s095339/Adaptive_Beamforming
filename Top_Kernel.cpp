@@ -47,19 +47,28 @@ struct my_qrf_traits : xf::solver::qrfTraits {
 
 void Master2Stream(MATRIX_IN_T* matrixA,
 	  hls::stream<MATRIX_IN_T>& matrixAStrm,
+    MATRIX_IN_T* Vs,
+    hls::stream<MATRIX_IN_T>& VsStrm,
 	  const unsigned int rowA,
     const unsigned int colA) 
 {
 
   for(unsigned int i = 0; i < 1000; i++) {
     #pragma HLS LOOP_TRIPCOUNT min = 1000 max = 1000
+    #pragma HLS PIPELINE
     matrixAStrm.write(matrixA[i]);
+  }
+
+  for(unsigned int i = 0;i<10;i++){
+    #pragma HLS PIPELINE
+    VsStrm.write(Vs[i]);
   }
 }
 
 void QRF(   hls::stream<MATRIX_IN_T>& matrixAStrm,
 	        hls::stream<MATRIX_OUT_T>& matrixQStrm,
-            hls::stream<MATRIX_OUT_T>& matrixRStrm
+            hls::stream<MATRIX_OUT_T>& matrixRStrm,
+            hls::stream<MATRIX_IN_T>&VsStrm
 	    ) 
       
 {
@@ -69,6 +78,7 @@ void QRF(   hls::stream<MATRIX_IN_T>& matrixAStrm,
 void qrf_transpose(     
   hls::stream<MATRIX_OUT_T>& matrixQStrm,
 	hls::stream<MATRIX_OUT_T>& matrixRStrm,
+  hls::stream<MATRIX_IN_T>&VsStrm,
 	//hls::x_complex<double>* matrixQ,
     MATRIX_OUT_T matrixR_trans_conj[][10],
     const unsigned int rowQ,
@@ -120,6 +130,7 @@ void pass_dataflow(
     MATRIX_IN_T* matrixA,
     //hls::x_complex<double>* matrixQ,
     MATRIX_OUT_T* matrixR,
+    MATRIX_IN_T* Vs,
     const unsigned int rowA,
     const unsigned int colA,
     const unsigned int rowQ,
@@ -134,17 +145,18 @@ void pass_dataflow(
   static hls::stream<MATRIX_IN_T> matrixAStrm;
   static hls::stream<MATRIX_OUT_T> matrixQStrm;
   static hls::stream<MATRIX_OUT_T> matrixRStrm;
+  static hls::stream<MATRIX_IN_T> VsStrm
   //static hls::stream<MATRIX_OUT_T> matrixLstrm;
   MATRIX_OUT_T matrixR_trans_conj[10][10];  //10X10 matrix
   
   //Turn the 2Darray MatrixA  sent from host to kernel by axi_master to the hls:stream type 
-  Master2Stream(matrixA, matrixAStrm, rowA, colA);
+  Master2Stream(matrixA, matrixAStrm,Vs,VsStrm, rowA, colA);
   
   //Vitis Library QR Factorization-------------- 
-  QRF(matrixAStrm,  matrixQStrm, matrixRStrm);
+  QRF(matrixAStrm,  matrixQStrm, matrixRStrm, VsStrm);
   
 
-  qrf_transpose(matrixQStrm,matrixRStrm,matrixR_trans_conj, 
+  qrf_transpose(matrixQStrm,matrixRStrm,VsStrm,matrixR_trans_conj, 
                  rowQ, colQ, rowR, colR);
   //Turn the 2D R(transposed conjugated matrix) to the 1D matrix
   //Turn the 2D R(transposed conjugated matrix) to the Stream
@@ -163,8 +175,7 @@ void pass_dataflow(
   //add your kernel---------------------------------------------------
   //param 
   //static hls::stream<MATRIX_OUT_T> matrixLstrm;
-  //
-  //
+  //static hls::stream<MATRIX_IN_T> VsStrm;
 
   //std::cout<< "4" <<std::endl;
 }
@@ -173,7 +184,7 @@ void pass_dataflow(
 
 extern "C" void Top_Kernel(
     MATRIX_IN_T matrixA[1000],
-    
+    MATRIX_IN_T Vs[10],
     //hls::x_complex<double> matrixQ[100*100],
     MATRIX_OUT_T matrixR[100]
     ) 
@@ -185,6 +196,7 @@ extern "C" void Top_Kernel(
 #pragma HLS INTERFACE m_axi port = matrixA bundle = gmem0 offset = slave depth = 1000
 //#pragma HLS INTERFACE m_axi port = matrixQ bundle = gmem1 offset = slave num_read_outstanding = 16 max_read_burst_length = \
 //    32
+#pragma HLS INTERFACE m_axi port = Vs bundle = gmem0 offset = slave depth = 10
 #pragma HLS TNTERFACE m_axi port = matrixR bundle = gmem1 offset = slave depth = 100
 
 
@@ -201,20 +213,18 @@ const unsigned int rowQ = 100;
 const unsigned int colQ = 100;
 const unsigned int rowR = 100;
 const unsigned int colR = 10;
-/*
+
 int k=0;
-for (int r = 0; r < rowA; r++) {
-  for (int c = 0; c < colA; c++) {
-      
-      std::cout << matrixA[k] << std::endl;
-      k++;
-  }
+for (int r = 0; r < 10; r++) {
+
+      std::cout << Vs[r] << std::endl;
 }
-*/
+
 pass_dataflow(
     matrixA,
     //matrixQ,
     matrixR,
+    Vs,
     rowA, 
     colA,
     rowQ, 
