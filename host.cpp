@@ -154,7 +154,7 @@ int main(int argc, const char* argv[]) {
     //Get Input Testbench                                             //
     //****************************************************************//
     std::complex<float> A[numRow][numCol] = {0}; 
-    std::complex<float> Vs[Vs_size] {1};
+    std::complex<float> Vs[Vs_size] = {1};
     std::string base_path = "./data/";
     std::string file_A =
         base_path + "A_matType_" + std::to_string(1) + "_" + std::to_string(0) + ".txt";
@@ -163,6 +163,7 @@ int main(int argc, const char* argv[]) {
     
 
     std::complex<float>* A_ptr = reinterpret_cast<std::complex<float>*>(A);
+    
     //std::complex<float>* Q_ptr = reinterpret_cast<std::complex<float>*>(Q_expected);
     //std::complex<float>* R_ptr = reinterpret_cast<std::complex<float>*>(R_expected);
 

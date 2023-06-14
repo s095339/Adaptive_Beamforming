@@ -3407,9 +3407,9 @@ window.onload = function () { addSorting(); }
 <center><h1>Design Guidance Report</h1></center><center><table class="header" border="0">
 <tr><td><b>Copyright</b></td><td>Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.</td></tr>
 <tr><td><b>Tool Version</b></td><td>xrcserver v.2022.1 (lin64) Build 0 </td></tr>
-<tr><td><b>Date</b></td><td>Wed Jun 14 22:02:56 2023</td></tr>
+<tr><td><b>Date</b></td><td>Wed Jun 14 21:33:16 2023</td></tr>
 <tr><td><b>Host</b></td><td>HLS04 running 64-bit Ubuntu 20.04.4 LTS</td></tr>
-<tr><td><b>Command</b></td><td>v++  -l -t sw_emu --platform /opt/xilinx/platforms/xilinx_u50_gen3x16_xdma_5_202210_1/xilinx_u50_gen3x16_xdma_5_202210_1.xpfm --save-temps --config /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/config/conn_u50.cfg -I /ext --temp_dir _x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1 --report_dir /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/reports/_build.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel --optimize 2 -R 2 --kernel_frequency 300 -o build_dir.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xclbin _x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xo </td></tr>
+<tr><td><b>Command</b></td><td>v++  -c -t hw_emu --platform /opt/xilinx/platforms/xilinx_u50_gen3x16_xdma_5_202210_1/xilinx_u50_gen3x16_xdma_5_202210_1.xpfm --save-temps --config /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/config/conn_u50.cfg -I /ext -k Top_Kernel -I. --temp_dir _x_temp.hw_emu.xilinx_u50_gen3x16_xdma_5_202210_1 --report_dir /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/reports/_x.hw_emu.xilinx_u50_gen3x16_xdma_5_202210_1 -o _x_temp.hw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xo Top_Kernel.cpp </td></tr>
 </table></center><br>
 <table class="toc" border="1"><tr><td><b>Table of Contents</b></td></tr>
 <tr><td><a href="#REPORT SUMMARY">1 REPORT SUMMARY</a></tr></td>
@@ -3417,9 +3417,9 @@ window.onload = function () { addSorting(); }
 <tr><td><a href="#CONFIG FILE DETAILS">3 CONFIG FILE DETAILS</a></tr></td>
 </table>
 <a name="REPORT SUMMARY"></a><h1>1 REPORT SUMMARY</h1>
-<pre>Violations found: 0
+<pre>Violations found: 26
 </pre>
-<pre>Rule Specs Violated: 0
+<pre>Rule Specs Violated: 4
 </pre>
 <a name="VIOLATION DETAILS"></a><h1>2 VIOLATION DETAILS</h1>
 <table border="1">
@@ -3433,6 +3433,292 @@ window.onload = function () { addSorting(); }
 <th align="left">Categories</th>
 <th align="left" width="350">Details</th>
 <th align="left" width="380">Resolution</th>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left">Throughput</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Throughput Related</td>
+<td align="left">Accelerator.Top_Kernel.Throughput</td>
+<td align="left">Pipelining result : Target II = NA, Final II = 1, Depth = 74, loop 'VITIS_LOOP_62_2'
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">10</td>
+<td align="left">Throughput</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Throughput Related</td>
+<td align="left">Accelerator.Top_Kernel.Throughput</td>
+<td align="left">Pipelining result : Target II = NA, Final II = 1, Depth = 1, loop 'Loop 1'
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">11</td>
+<td align="left">Kernel</td>
+<td align="left">warning</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Kernel Related</td>
+<td align="left">Accelerator.Top_Kernel.Kernel</td>
+<td align="left">The II Violation in module 'qrf_alt_false_100_10_my_qrf_traits_complex_complex_float_Pipeline_2' (loop 'Loop 1'): Unable to schedule 'store' operation ('r_i_M_value_addr_2_write_ln1081') of constant 0 on array 'r_i_M_value' due to limited memory ports (II = 1). Please consider using a memory core with more ports or partitioning the array 'r_i_M_value'.
+</td>
+<td align="left"><a href="http://www.xilinx.com/cgi-bin/docs/rdoc?v=2022.1;t=hls+guidance;d=200-885.html">See here for more help on vitis_hls 200-885 guidance.</a></td>
+</tr>
+<tr>
+<td align="left">12</td>
+<td align="left">Kernel</td>
+<td align="left">warning</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Kernel Related</td>
+<td align="left">Accelerator.Top_Kernel.Kernel</td>
+<td align="left">The II Violation in module 'qrf_alt_false_100_10_my_qrf_traits_complex_complex_float_Pipeline_2' (loop 'Loop 1'): Unable to schedule 'store' operation ('r_i_M_value_addr_4_write_ln1081') of constant 0 on array 'r_i_M_value' due to limited memory ports (II = 2). Please consider using a memory core with more ports or partitioning the array 'r_i_M_value'.
+</td>
+<td align="left"><a href="http://www.xilinx.com/cgi-bin/docs/rdoc?v=2022.1;t=hls+guidance;d=200-885.html">See here for more help on vitis_hls 200-885 guidance.</a></td>
+</tr>
+<tr>
+<td align="left">13</td>
+<td align="left">Kernel</td>
+<td align="left">warning</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Kernel Related</td>
+<td align="left">Accelerator.Top_Kernel.Kernel</td>
+<td align="left">The II Violation in module 'qrf_alt_false_100_10_my_qrf_traits_complex_complex_float_Pipeline_2' (loop 'Loop 1'): Unable to schedule 'store' operation ('r_i_M_value_addr_6_write_ln1081') of constant 0 on array 'r_i_M_value' due to limited memory ports (II = 3). Please consider using a memory core with more ports or partitioning the array 'r_i_M_value'.
+</td>
+<td align="left"><a href="http://www.xilinx.com/cgi-bin/docs/rdoc?v=2022.1;t=hls+guidance;d=200-885.html">See here for more help on vitis_hls 200-885 guidance.</a></td>
+</tr>
+<tr>
+<td align="left">14</td>
+<td align="left">Kernel</td>
+<td align="left">warning</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Kernel Related</td>
+<td align="left">Accelerator.Top_Kernel.Kernel</td>
+<td align="left">The II Violation in module 'qrf_alt_false_100_10_my_qrf_traits_complex_complex_float_Pipeline_2' (loop 'Loop 1'): Unable to schedule 'store' operation ('r_i_M_value_addr_8_write_ln1081') of constant 0 on array 'r_i_M_value' due to limited memory ports (II = 4). Please consider using a memory core with more ports or partitioning the array 'r_i_M_value'.
+</td>
+<td align="left"><a href="http://www.xilinx.com/cgi-bin/docs/rdoc?v=2022.1;t=hls+guidance;d=200-885.html">See here for more help on vitis_hls 200-885 guidance.</a></td>
+</tr>
+<tr>
+<td align="left">15</td>
+<td align="left">Throughput</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Throughput Related</td>
+<td align="left">Accelerator.Top_Kernel.Throughput</td>
+<td align="left">Pipelining result : Target II = NA, Final II = 5, Depth = 5, loop 'Loop 1'
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">16</td>
+<td align="left">Throughput</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Throughput Related</td>
+<td align="left">Accelerator.Top_Kernel.Throughput</td>
+<td align="left">Pipelining result : Target II = NA, Final II = 1, Depth = 2, loop 'col_copy_q_i'
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">17</td>
+<td align="left">Throughput</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Throughput Related</td>
+<td align="left">Accelerator.Top_Kernel.Throughput</td>
+<td align="left">Pipelining result : Target II = 1, Final II = 1, Depth = 63, function 'qrf_givens<float>'
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">18</td>
+<td align="left">Throughput</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Throughput Related</td>
+<td align="left">Accelerator.Top_Kernel.Throughput</td>
+<td align="left">Pipelining result : Target II = 1, Final II = 1, Depth = 69, loop 'calc_rotations'
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">19</td>
+<td align="left">Throughput</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Throughput Related</td>
+<td align="left">Accelerator.Top_Kernel.Throughput</td>
+<td align="left">Pipelining result : Target II = 4, Final II = 4, Depth = 24, loop 'update_r'
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">20</td>
+<td align="left">Throughput</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Throughput Related</td>
+<td align="left">Accelerator.Top_Kernel.Throughput</td>
+<td align="left">Pipelining result : Target II = NA, Final II = 1, Depth = 3, loop 'col_assign_loop'
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">21</td>
+<td align="left">Throughput</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Throughput Related</td>
+<td align="left">Accelerator.Top_Kernel.Throughput</td>
+<td align="left">Pipelining result : Target II = NA, Final II = 1, Depth = 2, loop 'VITIS_LOOP_96_1'
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">22</td>
+<td align="left">Throughput</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Throughput Related</td>
+<td align="left">Accelerator.Top_Kernel.Throughput</td>
+<td align="left">Pipelining result : Target II = NA, Final II = 1, Depth = 2, loop 'VITIS_LOOP_119_2'
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">23</td>
+<td align="left">Throughput</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Throughput Related</td>
+<td align="left">Accelerator.Top_Kernel.Throughput</td>
+<td align="left">Pipelining result : Target II = NA, Final II = 1, Depth = 3, loop 'VITIS_LOOP_164_1_VITIS_LOOP_165_2'
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">24</td>
+<td align="left">Throughput</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Throughput Related</td>
+<td align="left">Accelerator.Top_Kernel.Throughput</td>
+<td align="left">Pipelining result : Target II = NA, Final II = 1, Depth = 2, loop 'VITIS_LOOP_177_3'
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">25</td>
+<td align="left">Interface</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Interface Related</td>
+<td align="left">Accelerator.Top_Kernel.Interface</td>
+<td align="left">Design has inferred MAXI bursts, see Vitis HLS GUI synthesis summary report for detailed information.
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">26</td>
+<td align="left">Kernel</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Kernel Related</td>
+<td align="left">Accelerator.Top_Kernel.Kernel</td>
+<td align="left">**** Estimated Fmax: 411.00 MHz
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">Interface</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Interface Related</td>
+<td align="left">Accelerator.Top_Kernel.Interface</td>
+<td align="left">Multiple burst reads of length 125 and bit width 512 has been inferred on bundle 'gmem0'. These burst requests might be further partitioned into multiple requests during RTL generation, based on max_read_burst_length or max_write_burst_length settings. (<a href="file:///mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/Top_Kernel.cpp#line=56">Top_Kernel.cpp</a>)
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">Interface</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Interface Related</td>
+<td align="left">Accelerator.Top_Kernel.Interface</td>
+<td align="left">Multiple burst writes of length 50 and bit width 128 has been inferred on bundle 'gmem'. These burst requests might be further partitioned into multiple requests during RTL generation, based on max_read_burst_length or max_write_burst_length settings. (<a href="file:///mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/Top_Kernel.cpp#line=164">Top_Kernel.cpp</a>)
+</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">Latency</td>
+<td align="left">warning</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Latency Related</td>
+<td align="left">Accelerator.Top_Kernel.Latency</td>
+<td align="left">Cannot flatten loop 'Loop-1' (<a href="file:///mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/hw/qrf.hpp#line=717">qrf.hpp</a>) in function 'xf::solver::qrf_alt<false, 100, 10, my_qrf_traits, std::complex<float>, std::complex<float> >' either the parent loop or sub loop is do-while loop.
+</td>
+<td align="left"><a href="http://www.xilinx.com/cgi-bin/docs/rdoc?v=2022.1;t=hls+guidance;d=200-960.html">See here for more help on vitis_hls 200-960 guidance.</a></td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left">Latency</td>
+<td align="left">warning</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Latency Related</td>
+<td align="left">Accelerator.Top_Kernel.Latency</td>
+<td align="left">Cannot flatten loop 'row_copy' (<a href="file:///mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/hw/qrf.hpp#line=739">qrf.hpp</a>) in function 'xf::solver::qrf_alt<false, 100, 10, my_qrf_traits, std::complex<float>, std::complex<float> >' more than one sub loop.
+</td>
+<td align="left"><a href="http://www.xilinx.com/cgi-bin/docs/rdoc?v=2022.1;t=hls+guidance;d=200-960.html">See here for more help on vitis_hls 200-960 guidance.</a></td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left">Latency</td>
+<td align="left">warning</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Latency Related</td>
+<td align="left">Accelerator.Top_Kernel.Latency</td>
+<td align="left">Cannot flatten loop 'rotate' (<a href="file:///mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/hw/qrf.hpp#line=786">qrf.hpp</a>) in function 'xf::solver::qrf_alt<false, 100, 10, my_qrf_traits, std::complex<float>, std::complex<float> >' more than one sub loop.
+</td>
+<td align="left"><a href="http://www.xilinx.com/cgi-bin/docs/rdoc?v=2022.1;t=hls+guidance;d=200-960.html">See here for more help on vitis_hls 200-960 guidance.</a></td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left">Latency</td>
+<td align="left">warning</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Latency Related</td>
+<td align="left">Accelerator.Top_Kernel.Latency</td>
+<td align="left">Cannot flatten loop 'px' (<a href="file:///mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/hw/qrf.hpp#line=760">qrf.hpp</a>) in function 'xf::solver::qrf_alt<false, 100, 10, my_qrf_traits, std::complex<float>, std::complex<float> >' more than one sub loop.
+</td>
+<td align="left"><a href="http://www.xilinx.com/cgi-bin/docs/rdoc?v=2022.1;t=hls+guidance;d=200-960.html">See here for more help on vitis_hls 200-960 guidance.</a></td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="left">Latency</td>
+<td align="left">warning</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Latency Related</td>
+<td align="left">Accelerator.Top_Kernel.Latency</td>
+<td align="left">Cannot flatten loop 'row_assign_loop' (<a href="file:///mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/hw/qrf.hpp#line=826">qrf.hpp</a>) in function 'xf::solver::qrf_alt<false, 100, 10, my_qrf_traits, std::complex<float>, std::complex<float> >' the outer loop is not a perfect loop because there is nontrivial logic in the loop latch.
+</td>
+<td align="left"><a href="http://www.xilinx.com/cgi-bin/docs/rdoc?v=2022.1;t=hls+guidance;d=200-960.html">See here for more help on vitis_hls 200-960 guidance.</a></td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left">Throughput</td>
+<td align="left">advisory</td>
+<td align="left"><undefined></td>
+<td align="left">HLS Throughput Related</td>
+<td align="left">Accelerator.Top_Kernel.Throughput</td>
+<td align="left">Pipelining result : Target II = NA, Final II = 1, Depth = 3, loop 'VITIS_LOOP_56_1'
+</td>
+<td align="left"></td>
 </tr>
 </table>
 <br>

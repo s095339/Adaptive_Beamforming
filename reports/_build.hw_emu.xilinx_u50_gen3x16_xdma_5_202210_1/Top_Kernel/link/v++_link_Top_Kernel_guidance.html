@@ -3407,19 +3407,24 @@ window.onload = function () { addSorting(); }
 <center><h1>Design Guidance Report</h1></center><center><table class="header" border="0">
 <tr><td><b>Copyright</b></td><td>Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.</td></tr>
 <tr><td><b>Tool Version</b></td><td>xrcserver v.2022.1 (lin64) Build 0 </td></tr>
-<tr><td><b>Date</b></td><td>Wed Jun 14 22:02:56 2023</td></tr>
+<tr><td><b>Date</b></td><td>Wed Jun 14 21:37:43 2023</td></tr>
 <tr><td><b>Host</b></td><td>HLS04 running 64-bit Ubuntu 20.04.4 LTS</td></tr>
-<tr><td><b>Command</b></td><td>v++  -l -t sw_emu --platform /opt/xilinx/platforms/xilinx_u50_gen3x16_xdma_5_202210_1/xilinx_u50_gen3x16_xdma_5_202210_1.xpfm --save-temps --config /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/config/conn_u50.cfg -I /ext --temp_dir _x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1 --report_dir /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/reports/_build.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel --optimize 2 -R 2 --kernel_frequency 300 -o build_dir.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xclbin _x_temp.sw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xo </td></tr>
+<tr><td><b>Command</b></td><td>v++  -l -t hw_emu --platform /opt/xilinx/platforms/xilinx_u50_gen3x16_xdma_5_202210_1/xilinx_u50_gen3x16_xdma_5_202210_1.xpfm --save-temps --config /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/config/conn_u50.cfg -I /ext --temp_dir _x_temp.hw_emu.xilinx_u50_gen3x16_xdma_5_202210_1 --report_dir /mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/reports/_build.hw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel --optimize 2 -R 2 --kernel_frequency 300 -o build_dir.hw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xclbin _x_temp.hw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xo </td></tr>
 </table></center><br>
 <table class="toc" border="1"><tr><td><b>Table of Contents</b></td></tr>
 <tr><td><a href="#REPORT SUMMARY">1 REPORT SUMMARY</a></tr></td>
 <tr><td><a href="#VIOLATION DETAILS">2 VIOLATION DETAILS</a></tr></td>
 <tr><td><a href="#CONFIG FILE DETAILS">3 CONFIG FILE DETAILS</a></tr></td>
+<tr><td><a href="#PERFORMANCE CHECKS MET">4 PERFORMANCE CHECKS MET</a></tr></td>
 </table>
 <a name="REPORT SUMMARY"></a><h1>1 REPORT SUMMARY</h1>
-<pre>Violations found: 0
+<pre>Violations found: 3
 </pre>
-<pre>Rule Specs Violated: 0
+<pre>Rule Specs Violated: 1
+</pre>
+<pre>Rules Met: 1
+</pre>
+<pre>Rule Specs Met: 1
 </pre>
 <a name="VIOLATION DETAILS"></a><h1>2 VIOLATION DETAILS</h1>
 <table border="1">
@@ -3433,6 +3438,40 @@ window.onload = function () { addSorting(); }
 <th align="left">Categories</th>
 <th align="left" width="350">Details</th>
 <th align="left" width="380">Resolution</th>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">IP-LOCK-01</td>
+<td align="left">warning</td>
+<td align="left"><undefined></td>
+<td align="left">IP - Locked IP</td>
+<td align="left">System.Link.IP</td>
+<td align="left">In your vivado project:prj for design:dr the IP pfm_top_smartconnect_0_0 is locked. The IP is locked for the following reason - * The IP Data in the repository is incompatible with the current instance (despite having identical Version and Revision). You will need to upgrade the IP before viewing the customization and generating outputs.
+ * IP 'pfm_top_smartconnect_0_0' contains one or more locked subcores.* Please upgrade the IP.
+.</td>
+<td align="left">Check the IP and the install area for the latest version of the IPs. For additional information about designing with IP - refer to <a href="http:///www.xilinx.com/support/documentation/sw_manuals/xilinx2019_2/ug896-vivado-ip.pdf">UG896</a>. In vivado you can run the report_ip_status Tcl command for additional information. In addition, <a href="file:////mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/_x_temp.hw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/link/vivado/vpl/link_ip_guidance.txt">report_ip_status</a> the can be viewed.</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">IP-LOCK-01</td>
+<td align="left">warning</td>
+<td align="left"><undefined></td>
+<td align="left">IP - Locked IP</td>
+<td align="left">System.Link.IP</td>
+<td align="left">In your vivado project:prj for design:dr the IP bd_387c_m00e_0 is locked. The IP is locked for the following reason - * IP definition 'SC EXIT (1.0)' for IP 'bd_387c_m00e_0' (customized with software release 2022.1) has a different revision in the IP Catalog.
+.</td>
+<td align="left">Check the IP and the install area for the latest version of the IPs. For additional information about designing with IP - refer to <a href="http:///www.xilinx.com/support/documentation/sw_manuals/xilinx2019_2/ug896-vivado-ip.pdf">UG896</a>. In vivado you can run the report_ip_status Tcl command for additional information. In addition, <a href="file:////mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/_x_temp.hw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/link/vivado/vpl/link_ip_guidance.txt">report_ip_status</a> the can be viewed.</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left">IP-LOCK-01</td>
+<td align="left">warning</td>
+<td align="left"><undefined></td>
+<td align="left">IP - Locked IP</td>
+<td align="left">System.Link.IP</td>
+<td align="left">In your vivado project:prj for design:dr the IP bd_387c_m01e_0 is locked. The IP is locked for the following reason - * IP definition 'SC EXIT (1.0)' for IP 'bd_387c_m01e_0' (customized with software release 2022.1) has a different revision in the IP Catalog.
+.</td>
+<td align="left">Check the IP and the install area for the latest version of the IPs. For additional information about designing with IP - refer to <a href="http:///www.xilinx.com/support/documentation/sw_manuals/xilinx2019_2/ug896-vivado-ip.pdf">UG896</a>. In vivado you can run the report_ip_status Tcl command for additional information. In addition, <a href="file:////mnt/HLSNAS/04.HPOmGn/m111061549/BeamFormer/Adaptive_Beamforming/_x_temp.hw_emu.xilinx_u50_gen3x16_xdma_5_202210_1/link/vivado/vpl/link_ip_guidance.txt">report_ip_status</a> the can be viewed.</td>
 </tr>
 </table>
 <br>
@@ -3454,6 +3493,31 @@ sp=Top_Kernel_1.Vs:HBM[1]
 sp=Top_Kernel_1.matrixR:HBM[2]
 
 </td>
+</tr>
+</table>
+<br>
+<a name="PERFORMANCE CHECKS MET"></a><h1>4 PERFORMANCE CHECKS MET</h1>
+<table border="1">
+<caption>Items that offer design performance insight</caption>
+<tr class="ns-sort">
+<th align="left">Id</th>
+<th align="left">Name</th>
+<th align="left" width="170">Full Name</th>
+<th align="left">Categories</th>
+<th align="left">Actual</th>
+<th align="left">Threshold</th>
+<th align="left" width="350">Details</th>
+<th align="left" width="320">Rule Description</th>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">SYSLINK-1</td>
+<td align="left">system_link Top Level BD Creation</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Created top level block diagram design dr.bd.tcl</td>
+<td align="left"></td>
 </tr>
 </table>
 <br>

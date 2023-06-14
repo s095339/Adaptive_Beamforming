@@ -584,9 +584,9 @@ struct qrf_alt_config {
 // ===================================================================================================================
 // QRF_BASIC
 template <bool TransposedQ, int RowsA, int ColsA, typename QRF_TRAITS, typename InputType, typename OutputType>
-void qrf_basic(hls::stream<InputType>& matrixAStrm,
-               hls::stream<OutputType>& matrixQStrm,
-               hls::stream<OutputType>& matrixRStrm) {
+void qrf_basic(hls::stream<InputType,1000>& matrixAStrm,
+             hls::stream<OutputType,10000>& matrixQStrm,
+             hls::stream<OutputType,1000>& matrixRStrm) {
     // Verify that template parameters are correct in simulation
     if (RowsA < ColsA) {
 #ifndef __SYNTHESIS__
@@ -699,9 +699,9 @@ qrf_out_row_assign:
 // ===================================================================================================================
 // QRF_ALT: Optimized for throughput.
 template <bool TransposedQ, int RowsA, int ColsA, typename QRF_TRAITS, typename InputType, typename OutputType>
-void qrf_alt(hls::stream<InputType>& matrixAStrm,
-             hls::stream<OutputType>& matrixQStrm,
-             hls::stream<OutputType>& matrixRStrm) {
+void qrf_alt(hls::stream<InputType,1000>& matrixAStrm,
+             hls::stream<OutputType,10000>& matrixQStrm,
+             hls::stream<OutputType,1000>& matrixRStrm) {
     // Verify that template parameters are correct in simulation
     if (RowsA < ColsA) {
         exit(1);
@@ -864,9 +864,9 @@ template <bool TransposedQ,
           typename InputType,
           typename OutputType,
           typename QRF_TRAITS = qrfTraits>
-void qrf(hls::stream<InputType>& matrixAStrm,
-         hls::stream<OutputType>& matrixQStrm,
-         hls::stream<OutputType>& matrixRStrm) {
+void qrf(hls::stream<InputType,1000>& matrixAStrm,
+         hls::stream<OutputType,10000>& matrixQStrm,
+         hls::stream<OutputType,1000>& matrixRStrm) {
     switch (QRF_TRAITS::ARCH) {
         case 0:
             qrf_basic<TransposedQ, RowsA, ColsA, QRF_TRAITS, InputType, OutputType>(matrixAStrm, matrixQStrm,
