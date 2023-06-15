@@ -249,7 +249,7 @@ int main(int argc, const char* argv[]) {
     gettimeofday(&tstart, 0);
 
     q.enqueueTask(Top_Kernel, nullptr, nullptr);
-
+    
     q.finish();
     gettimeofday(&tend, 0);
     std::cout << "INFO: Finish kernel execution" << std::endl;
