@@ -47,38 +47,50 @@ struct my_qrf_traits : xf::solver::qrfTraits {
 
 void Master2Stream(MATRIX_IN_T* matrixA,
 	  hls::stream<MATRIX_IN_T>& matrixAStrm,
+    MATRIX_IN_T* Vs,
+    hls::stream<MATRIX_IN_T>& VsStrm_out1,
 	  const unsigned int rowA,
     const unsigned int colA) 
 {
 
   for(unsigned int i = 0; i < 1000; i++) {
     #pragma HLS LOOP_TRIPCOUNT min = 1000 max = 1000
+    #pragma HLS PIPELINE
     matrixAStrm.write(matrixA[i]);
+  }
+
+  for(unsigned int i = 0;i<10;i++){
+    #pragma HLS PIPELINE
+    VsStrm_out1.write(Vs[i]);
   }
 }
 
-void QRF(   hls::stream<MATRIX_IN_T>& matrixAStrm,
+void QRF( hls::stream<MATRIX_IN_T>& matrixAStrm,
 	        hls::stream<MATRIX_OUT_T>& matrixQStrm,
-            hls::stream<MATRIX_OUT_T>& matrixRStrm
+          hls::stream<MATRIX_OUT_T>& matrixRStrm,
+          hls::stream<MATRIX_IN_T>& VsStrm_out1,
+          hls::stream<MATRIX_IN_T>& VsStrm_out2
 	    ) 
       
 {
-    xf::solver::qrf<0, 100, 10, MATRIX_IN_T, MATRIX_OUT_T, my_qrf_traits>(matrixAStrm, matrixQStrm,matrixRStrm);
+    xf::solver::qrf<0, 100, 10, MATRIX_IN_T, MATRIX_OUT_T, my_qrf_traits>(matrixAStrm, matrixQStrm,matrixRStrm,VsStrm_out1,VsStrm_out2);
 }
 
 void qrf_transpose(     
   hls::stream<MATRIX_OUT_T>& matrixQStrm,
 	hls::stream<MATRIX_OUT_T>& matrixRStrm,
-	//hls::x_complex<double>* matrixQ,
-    MATRIX_OUT_T matrixR_trans_conj[][10],
+  hls::stream<MATRIX_IN_T>& VsStrm_out2,
+  hls::stream<MATRIX_IN_T>& VsStrm,
+	hls::stream<MATRIX_OUT_T>& RStrm,
     const unsigned int rowQ,
     const unsigned int colQ,
     const unsigned int rowR,
     const unsigned int colR
+    
     ) 
 {
  
-  MATRIX_OUT_T tempQ, tempQ_delay, tempR,tempR_delay,temp;
+  MATRIX_OUT_T tempQ, tempQ_delay, tempR,tempR_delay,temp,tempVs;
 
   unsigned int r,c;
   r=0;
@@ -97,8 +109,9 @@ void qrf_transpose(
 
     //轉製共軛--------------------------
     if(i < 100){//if i < 100.
-      temp = std::conj(tempR);
-      matrixR_trans_conj[c][r] = (r>c)? 0:temp;
+      //temp = std::conj(tempR);
+      temp = (r>c)? 0:tempR;
+      RStrm.write(temp);
       //std::cout<<temp<<std::endl;
     }else{
       tempR_delay = tempR;
@@ -106,12 +119,18 @@ void qrf_transpose(
     //-----------------------------------------
   }
   
-  for(unsigned int i=0; i<rowQ*colQ; i++){
+  for(unsigned int i=0; i<10000; i++){
     //clean the Q stream
     #pragma HLS LOOP_TRIPCOUNT min = rowQ*colQ max = rowQ*colQ
     #pragma HLS PIPELINE
     tempQ = matrixQStrm.read();
     tempQ_delay = tempQ;
+  }
+
+
+  for(unsigned int i=0; i<10; i++){
+    tempVs = VsStrm_out2.read();
+    VsStrm.write(tempVs);
   }
 }
 
@@ -120,6 +139,7 @@ void pass_dataflow(
     MATRIX_IN_T* matrixA,
     //hls::x_complex<double>* matrixQ,
     MATRIX_OUT_T* matrixR,
+    MATRIX_IN_T* Vs,
     const unsigned int rowA,
     const unsigned int colA,
     const unsigned int rowQ,
@@ -134,39 +154,47 @@ void pass_dataflow(
   static hls::stream<MATRIX_IN_T> matrixAStrm;
   static hls::stream<MATRIX_OUT_T> matrixQStrm;
   static hls::stream<MATRIX_OUT_T> matrixRStrm;
+  // in out stream for Vs to avoid bypass path=======
+  static hls::stream<MATRIX_IN_T> VsStrm_out1;
+  static hls::stream<MATRIX_IN_T> VsStrm_out2;
+  //=================================================
+  static hls::stream<MATRIX_IN_T> VsStrm;
+  static hls::stream<MATRIX_IN_T> RStrm;
   //static hls::stream<MATRIX_OUT_T> matrixLstrm;
-  MATRIX_OUT_T matrixR_trans_conj[10][10];  //10X10 matrix
-  
+  //10X10 matrix
+  #pragma HLS stream depth=1000 variable=matrixAStrm
+  #pragma HLS stream depth=10000 variable=matrixQStrm
+  #pragma HLS stream depth=1000 variable=matrixRStrm
+
+  #pragma HLS stream depth=10 variable=VsStrm_out1
+  #pragma HLS stream depth=10 variable=VsStrm_out2
+
+  #pragma HLS stream depth=10 variable=VsStrm
+  #pragma HLS stream depth=100 variable=RStrm
   //Turn the 2Darray MatrixA  sent from host to kernel by axi_master to the hls:stream type 
-  Master2Stream(matrixA, matrixAStrm, rowA, colA);
+  Master2Stream(matrixA, matrixAStrm,Vs,VsStrm_out1, rowA, colA);
   
   //Vitis Library QR Factorization-------------- 
-  QRF(matrixAStrm,  matrixQStrm, matrixRStrm);
+  QRF(matrixAStrm,  matrixQStrm, matrixRStrm,VsStrm_out1,VsStrm_out2);
   
 
-  qrf_transpose(matrixQStrm,matrixRStrm,matrixR_trans_conj, 
+  qrf_transpose(matrixQStrm,matrixRStrm,VsStrm_out2,VsStrm,RStrm, 
                  rowQ, colQ, rowR, colR);
-  //Turn the 2D R(transposed conjugated matrix) to the 1D matrix
-  //Turn the 2D R(transposed conjugated matrix) to the Stream
-  unsigned int k=0;
-  for(unsigned int r=0; r<10; r++){
-    for(unsigned int c=0; c<10; c++){
-      #pragma PIPELINE
-      MATRIX_OUT_T temp;
-      temp = matrixR_trans_conj[r][c]; // Set a temp to avoid RAW to apply the pipeline
-      matrixR[k] = temp;
-      //matrixLstrm.write(temp);
-      k++;
-    }
+
+
+  ///要做的時候要把這邊刪掉=======
+  for(unsigned j=0; j<10; j++){
+    MATRIX_IN_T tmp;
+    tmp = VsStrm.read();
   }
-
-  //add your kernel---------------------------------------------------
-  //param 
-  //static hls::stream<MATRIX_OUT_T> matrixLstrm;
-  //
-  //
-
-  //std::cout<< "4" <<std::endl;
+  for(unsigned k=0; k<100 ;k++){
+    matrixR[k]= RStrm.read();
+  }
+  //===========================
+  //addd your kernel================================
+  //RStrm
+  //VsStrm
+  //================================================
 }
 
 
@@ -174,6 +202,7 @@ void pass_dataflow(
 extern "C" void Top_Kernel(
     MATRIX_IN_T matrixA[1000],
     
+    MATRIX_IN_T Vs[10],
     //hls::x_complex<double> matrixQ[100*100],
     MATRIX_OUT_T matrixR[100]
     ) 
@@ -185,11 +214,12 @@ extern "C" void Top_Kernel(
 #pragma HLS INTERFACE m_axi port = matrixA bundle = gmem0 offset = slave depth = 1000
 //#pragma HLS INTERFACE m_axi port = matrixQ bundle = gmem1 offset = slave num_read_outstanding = 16 max_read_burst_length = \
 //    32
-#pragma HLS TNTERFACE m_axi port = matrixR bundle = gmem1 offset = slave depth = 100
+#pragma HLS INTERFACE m_axi port = Vs bundle = gmem1 offset = slave depth = 10
+#pragma HLS INTERFACE m_axi port = matrixR bundle = gmem2 offset = slave depth = 100
 
 
 //#pragma HLS INTERFACE s_axilite port = matrixA bundle = control
-//#pragma HLS INTERFACE s_axilite port = matrixQ bundle = control
+//#pragma HLS INTERFACE s_axilite port = Vs bundle = control
 //#pragma HLS INTERFACE s_axilite port = matrixR bundle = control
 
 //#pragma HLS INTERFACE s_axilite port = return bundle = control
@@ -203,18 +233,16 @@ const unsigned int rowR = 100;
 const unsigned int colR = 10;
 /*
 int k=0;
-for (int r = 0; r < rowA; r++) {
-  for (int c = 0; c < colA; c++) {
-      
-      std::cout << matrixA[k] << std::endl;
-      k++;
-  }
+for (int r = 0; r < 10; r++) {
+
+      std::cout << Vs[r] << std::endl;
 }
 */
 pass_dataflow(
     matrixA,
     //matrixQ,
     matrixR,
+    Vs,
     rowA, 
     colA,
     rowQ, 

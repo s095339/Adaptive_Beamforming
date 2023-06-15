@@ -68,7 +68,7 @@ class ArgParser {
 int main(int argc, const char* argv[]) {
     // Initialize parser
     ArgParser parser(argc, argv);
-    std::cout << "OUR PROJECT!!!!!!!" << std::endl;
+    std::cout << "================Adative Beamforming================" << std::endl;
     // Initialize paths addresses
     std::string xclbin_path;
     std::string num_str;
@@ -136,23 +136,25 @@ int main(int argc, const char* argv[]) {
 
     // Initialization of host buffers
     
+    //****************************************************************//
+    //Input Output Data Setting                                       //
+    //****************************************************************//
     int in_size = numRow * numCol;
     int R_size = 100;
-    std::complex<float>* dataA_qrd;
+    int Vs_size = 10;
+    std::complex<double>* dataA_qrd;
+    std::complex<double>* dataR_qrd;
+    std::complex<double>* dataVs_qrd;
+    dataA_qrd = aligned_alloc<std::complex<double>>(in_size);
+    //dataQ_qrd = aligned_alloc<std::complex<double>>(Q_size);
+    dataR_qrd = aligned_alloc<std::complex<double>>(R_size);
+    dataVs_qrd = aligned_alloc<std::complex<double>>(Vs_size);
 
-    std::complex<float>* dataR_qrd;
-    dataA_qrd = aligned_alloc<std::complex<float>>(in_size);
-    //dataQ_qrd = aligned_alloc<std::complex<float>>(Q_size);
-    dataR_qrd = aligned_alloc<std::complex<float>>(R_size);
-
-    // Generate general matrix numRow x numCol
-    //matGen<std::complex<float>>(numRow, numCol, seed, dataA_qrd);
-    //(my code)read input data from data dir------------------------
-    // Matrix arrays
-    std::complex<float> A[numRow][numCol] = {0}; // The input array.  Cast from A_generated
-                                         // Note that this needs to be maximally-sized to support the largest
-                                         // Q, otherwise we get strange LAPACK results when ROWS > COLS
-
+    //****************************************************************//
+    //Get Input Testbench                                             //
+    //****************************************************************//
+    std::complex<double> A[numRow][numCol] = {0}; 
+    std::complex<double> Vs[Vs_size] = {1};
     std::string base_path = "./data/";
     std::string file_A =
         base_path + "A_matType_" + std::to_string(1) + "_" + std::to_string(0) + ".txt";
@@ -160,38 +162,37 @@ int main(int argc, const char* argv[]) {
     std::cout <<"read file: "<< file_A << std::endl;
     
 
-    std::complex<float>* A_ptr = reinterpret_cast<std::complex<float>*>(A);
-    //std::complex<float>* Q_ptr = reinterpret_cast<std::complex<float>*>(Q_expected);
-    //std::complex<float>* R_ptr = reinterpret_cast<std::complex<float>*>(R_expected);
+    std::complex<double>* A_ptr = reinterpret_cast<std::complex<double>*>(A);
+    
+    //std::complex<double>* Q_ptr = reinterpret_cast<std::complex<double>*>(Q_expected);
+    //std::complex<double>* R_ptr = reinterpret_cast<std::complex<double>*>(R_expected);
 
     int A_size = numRow * numCol;
-    //int Q_size = numRow * numRow;
-    //int R_size = numRow * numCol;
-
     readTxt(file_A, A_ptr, A_size);
-    //readTxt(file_Q, Q_ptr, Q_size);
-    //readTxt(file_R, R_ptr, R_size);
+    //TODO:Setting Vs input=======================//
+    //Vs = ....
+    //============================================//
     int k = 0;
     for (int r = 0; r < numRow; r++) {
         for (int c = 0; c < numCol; c++) {
-            // Cast back to pick up quantization. Used in test criteria
-            //A[r][c] = A[r][c]
-            //std::cout<< A[r][c] << std::endl;
             dataA_qrd[k] = A[r][c];
-            //std::cout<< dataA_qrd[k] << std::endl;
             k++;
         }
         //std::cout<<std::endl;
     }
+
+    for(int i = 0; i < Vs_size; i++){
+        dataVs_qrd[i] = Vs[i];
+    }
     //--------------------------------------------------------------
-    std::complex<float>* dataA = new std::complex<float>[in_size];
+    std::complex<double>* dataA = new std::complex<double>[in_size];
     for (int i = 0; i < in_size; ++i) {
         dataA[i] = dataA_qrd[i];
     }
 
     // DDR Settings
     std::vector<cl_mem_ext_ptr_t> mext_A(1);
-    //std::vector<cl_mem_ext_ptr_t> mext_Q(1);
+    std::vector<cl_mem_ext_ptr_t> mext_Vs(1);
     std::vector<cl_mem_ext_ptr_t> mext_R(1);
     // mext_i[0].flags = XCL_MEM_DDR_BANK0;
     // mext_o[0].flags = XCL_MEM_DDR_BANK0;
@@ -200,24 +201,27 @@ int main(int argc, const char* argv[]) {
     // mext_o[0].obj = tau_qrd;
     // mext_o[0].param = 0;
     mext_A[0] = {0, dataA_qrd, Top_Kernel()};
-    //mext_Q[0] = {1, dataQ_qrd, Top_Kernel()};
-    mext_R[0] = {1, dataR_qrd, Top_Kernel()};
+    mext_Vs[0] = {1, dataVs_qrd, Top_Kernel()};////////VS/////////////
+    mext_R[0] = {2, dataR_qrd, Top_Kernel()};
     // Create device buffer and map dev buf to host buf
-    std::vector<cl::Buffer> input_buffer(1), output_buffer_R(1);
+    std::vector<cl::Buffer> input_buffer(1),input_Vs_buffer(1), output_buffer_R(1);
 
     input_buffer[0] = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE,
-                                 sizeof(std::complex<float>) * in_size, &mext_A[0]);
+                                 sizeof(std::complex<double>) * in_size, &mext_A[0]);
     //output_buffer_Q[0] = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY,
-    //                              sizeof(std::complex<float>) * Q_size, &mext_Q[0]);
+    //                              sizeof(std::complex<double>) * Q_size, &mext_Q[0]);
+    input_Vs_buffer[0] = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE,
+                                 sizeof(std::complex<double>) * Vs_size, &mext_Vs[0]);
     output_buffer_R[0] = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY,
-                                  sizeof(std::complex<float>) * R_size, &mext_R[0]); 
+                                  sizeof(std::complex<double>) * R_size, &mext_R[0]); 
     // Data transfer from host buffer to device buffer
     std::vector<std::vector<cl::Event> > kernel_evt(2);
     kernel_evt[0].resize(1);
     kernel_evt[1].resize(1);
 
-    std::vector<cl::Memory> ob_in, ob_out_R; //ob_out_Q;
+    std::vector<cl::Memory> ob_in,ob_vs, ob_out_R; //ob_out_Q;
     ob_in.push_back(input_buffer[0]);
+    ob_vs.push_back(input_Vs_buffer[0]);
     //ob_out_Q.push_back(input_buffer[0]);
     //ob_out_Q.push_back(output_buffer_Q[0]);
     //ob_out_R.push_back(input_buffer[0]);
@@ -225,9 +229,11 @@ int main(int argc, const char* argv[]) {
 
     // Setup kernel
     Top_Kernel.setArg(0, input_buffer[0]);
-    Top_Kernel.setArg(1, output_buffer_R[0]);
+    Top_Kernel.setArg(1, input_Vs_buffer[0]);
+    Top_Kernel.setArg(2, output_buffer_R[0]);
 
     q.enqueueMigrateMemObjects(ob_in, 0, nullptr, &kernel_evt[0][0]); // 0 : migrate from host to dev
+    q.enqueueMigrateMemObjects(ob_vs, 0, nullptr, &kernel_evt[0][0]);
     q.finish();
     std::cout << "INFO: Finish data transfer from host to device" << std::endl;
 
@@ -243,7 +249,7 @@ int main(int argc, const char* argv[]) {
     gettimeofday(&tstart, 0);
 
     q.enqueueTask(Top_Kernel, nullptr, nullptr);
-
+    
     q.finish();
     gettimeofday(&tend, 0);
     std::cout << "INFO: Finish kernel execution" << std::endl;
