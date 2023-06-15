@@ -119,7 +119,7 @@ void qrf_transpose(
     //-----------------------------------------
   }
   
-  for(unsigned int i=0; i<rowQ*colQ; i++){
+  for(unsigned int i=0; i<10000; i++){
     //clean the Q stream
     #pragma HLS LOOP_TRIPCOUNT min = rowQ*colQ max = rowQ*colQ
     #pragma HLS PIPELINE
@@ -162,7 +162,15 @@ void pass_dataflow(
   static hls::stream<MATRIX_IN_T> RStrm;
   //static hls::stream<MATRIX_OUT_T> matrixLstrm;
   //10X10 matrix
-  
+  #pragma HLS stream depth=1000 variable=matrixAStrm
+  #pragma HLS stream depth=10000 variable=matrixQStrm
+  #pragma HLS stream depth=1000 variable=matrixRStrm
+
+  #pragma HLS stream depth=10 variable=VsStrm_out1
+  #pragma HLS stream depth=10 variable=VsStrm_out2
+
+  #pragma HLS stream depth=10 variable=VsStrm
+  #pragma HLS stream depth=100 variable=RStrm
   //Turn the 2Darray MatrixA  sent from host to kernel by axi_master to the hls:stream type 
   Master2Stream(matrixA, matrixAStrm,Vs,VsStrm_out1, rowA, colA);
   
@@ -206,12 +214,12 @@ extern "C" void Top_Kernel(
 #pragma HLS INTERFACE m_axi port = matrixA bundle = gmem0 offset = slave depth = 1000
 //#pragma HLS INTERFACE m_axi port = matrixQ bundle = gmem1 offset = slave num_read_outstanding = 16 max_read_burst_length = \
 //    32
-#pragma HLS INTERFACE m_axi port = Vs bundle = gmem0 offset = slave depth = 10
-#pragma HLS TNTERFACE m_axi port = matrixR bundle = gmem1 offset = slave depth = 100
+#pragma HLS INTERFACE m_axi port = Vs bundle = gmem1 offset = slave depth = 10
+#pragma HLS INTERFACE m_axi port = matrixR bundle = gmem2 offset = slave depth = 100
 
 
 //#pragma HLS INTERFACE s_axilite port = matrixA bundle = control
-//#pragma HLS INTERFACE s_axilite port = matrixQ bundle = control
+//#pragma HLS INTERFACE s_axilite port = Vs bundle = control
 //#pragma HLS INTERFACE s_axilite port = matrixR bundle = control
 
 //#pragma HLS INTERFACE s_axilite port = return bundle = control
