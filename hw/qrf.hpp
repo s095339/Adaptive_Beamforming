@@ -701,12 +701,19 @@ qrf_out_row_assign:
 template <bool TransposedQ, int RowsA, int ColsA, typename QRF_TRAITS, typename InputType, typename OutputType>
 void qrf_alt(hls::stream<InputType>& matrixAStrm,
              hls::stream<OutputType>& matrixQStrm,
-             hls::stream<OutputType>& matrixRStrm) {
+             hls::stream<OutputType>& matrixRStrm,
+             hls::stream<InputType>& VsStrm_out1,
+             hls::stream<InputType>& VsStrm_out2
+             ) {
     // Verify that template parameters are correct in simulation
     if (RowsA < ColsA) {
         exit(1);
     }
-
+    InputType tmpdfdf;
+    for(unsigned i=0; i<10;i++){
+        tmpdfdf = VsStrm_out1.read();
+        VsStrm_out2.write(tmpdfdf);
+    }
     // Declare the ROMs defining the processing sequence
     static const qrf_alt_config<RowsA, ColsA, InputType> CONFIG;
 
@@ -866,7 +873,10 @@ template <bool TransposedQ,
           typename QRF_TRAITS = qrfTraits>
 void qrf(hls::stream<InputType>& matrixAStrm,
          hls::stream<OutputType>& matrixQStrm,
-         hls::stream<OutputType>& matrixRStrm) {
+         hls::stream<OutputType>& matrixRStrm,
+         hls::stream<InputType>& VsStrm_out1,
+         hls::stream<InputType>& VsStrm_out2
+         ) {
     switch (QRF_TRAITS::ARCH) {
         case 0:
             qrf_basic<TransposedQ, RowsA, ColsA, QRF_TRAITS, InputType, OutputType>(matrixAStrm, matrixQStrm,
@@ -874,7 +884,7 @@ void qrf(hls::stream<InputType>& matrixAStrm,
             break;
         case 1:
             qrf_alt<TransposedQ, RowsA, ColsA, QRF_TRAITS, InputType, OutputType>(matrixAStrm, matrixQStrm,
-                                                                                  matrixRStrm);
+                                                                                  matrixRStrm,VsStrm_out1,VsStrm_out2);
             break;
         default:
             qrf_basic<TransposedQ, RowsA, ColsA, QRF_TRAITS, InputType, OutputType>(matrixAStrm, matrixQStrm,

@@ -48,7 +48,7 @@ struct my_qrf_traits : xf::solver::qrfTraits {
 void Master2Stream(MATRIX_IN_T* matrixA,
 	  hls::stream<MATRIX_IN_T>& matrixAStrm,
     MATRIX_IN_T* Vs,
-    hls::stream<MATRIX_IN_T>& VsStrm,
+    hls::stream<MATRIX_IN_T>& VsStrm_out1,
 	  const unsigned int rowA,
     const unsigned int colA) 
 {
@@ -61,34 +61,36 @@ void Master2Stream(MATRIX_IN_T* matrixA,
 
   for(unsigned int i = 0;i<10;i++){
     #pragma HLS PIPELINE
-    VsStrm.write(Vs[i]);
+    VsStrm_out1.write(Vs[i]);
   }
 }
 
-void QRF(   hls::stream<MATRIX_IN_T>& matrixAStrm,
+void QRF( hls::stream<MATRIX_IN_T>& matrixAStrm,
 	        hls::stream<MATRIX_OUT_T>& matrixQStrm,
-            hls::stream<MATRIX_OUT_T>& matrixRStrm
-            
+          hls::stream<MATRIX_OUT_T>& matrixRStrm,
+          hls::stream<MATRIX_IN_T>& VsStrm_out1,
+          hls::stream<MATRIX_IN_T>& VsStrm_out2
 	    ) 
       
 {
-    xf::solver::qrf<0, 100, 10, MATRIX_IN_T, MATRIX_OUT_T, my_qrf_traits>(matrixAStrm, matrixQStrm,matrixRStrm);
+    xf::solver::qrf<0, 100, 10, MATRIX_IN_T, MATRIX_OUT_T, my_qrf_traits>(matrixAStrm, matrixQStrm,matrixRStrm,VsStrm_out1,VsStrm_out2);
 }
 
 void qrf_transpose(     
   hls::stream<MATRIX_OUT_T>& matrixQStrm,
 	hls::stream<MATRIX_OUT_T>& matrixRStrm,
-  
-	//hls::x_complex<double>* matrixQ,
-    MATRIX_OUT_T matrixR_trans_conj[][10],
+  hls::stream<MATRIX_IN_T>& VsStrm_out2,
+  hls::stream<MATRIX_IN_T>& VsStrm,
+	hls::stream<MATRIX_OUT_T>& RStrm,
     const unsigned int rowQ,
     const unsigned int colQ,
     const unsigned int rowR,
     const unsigned int colR
+    
     ) 
 {
  
-  MATRIX_OUT_T tempQ, tempQ_delay, tempR,tempR_delay,temp;
+  MATRIX_OUT_T tempQ, tempQ_delay, tempR,tempR_delay,temp,tempVs;
 
   unsigned int r,c;
   r=0;
@@ -107,8 +109,9 @@ void qrf_transpose(
 
     //轉製共軛--------------------------
     if(i < 100){//if i < 100.
-      temp = std::conj(tempR);
-      matrixR_trans_conj[r][c] = (r>c)? 0:temp;
+      //temp = std::conj(tempR);
+      temp = (r>c)? 0:tempR;
+      RStrm.write(temp);
       //std::cout<<temp<<std::endl;
     }else{
       tempR_delay = tempR;
@@ -122,6 +125,12 @@ void qrf_transpose(
     #pragma HLS PIPELINE
     tempQ = matrixQStrm.read();
     tempQ_delay = tempQ;
+  }
+
+
+  for(unsigned int i=0; i<10; i++){
+    tempVs = VsStrm_out2.read();
+    VsStrm.write(tempVs);
   }
 }
 
@@ -145,44 +154,39 @@ void pass_dataflow(
   static hls::stream<MATRIX_IN_T> matrixAStrm;
   static hls::stream<MATRIX_OUT_T> matrixQStrm;
   static hls::stream<MATRIX_OUT_T> matrixRStrm;
-  static hls::stream<MATRIX_IN_T,10> VsStrm;
+  // in out stream for Vs to avoid bypass path=======
+  static hls::stream<MATRIX_IN_T> VsStrm_out1;
+  static hls::stream<MATRIX_IN_T> VsStrm_out2;
+  //=================================================
+  static hls::stream<MATRIX_IN_T> VsStrm;
+  static hls::stream<MATRIX_IN_T> RStrm;
   //static hls::stream<MATRIX_OUT_T> matrixLstrm;
-  MATRIX_OUT_T matrixR_trans_conj[10][10];  //10X10 matrix
-  MATRIX_IN_T temp_VS;
+  //10X10 matrix
+  
   //Turn the 2Darray MatrixA  sent from host to kernel by axi_master to the hls:stream type 
-  Master2Stream(matrixA, matrixAStrm,Vs,VsStrm, rowA, colA);
+  Master2Stream(matrixA, matrixAStrm,Vs,VsStrm_out1, rowA, colA);
   
   //Vitis Library QR Factorization-------------- 
-  QRF(matrixAStrm,  matrixQStrm, matrixRStrm);
+  QRF(matrixAStrm,  matrixQStrm, matrixRStrm,VsStrm_out1,VsStrm_out2);
   
 
-  qrf_transpose(matrixQStrm,matrixRStrm,matrixR_trans_conj, 
+  qrf_transpose(matrixQStrm,matrixRStrm,VsStrm_out2,VsStrm,RStrm, 
                  rowQ, colQ, rowR, colR);
-  //Turn the 2D R(transposed conjugated matrix) to the 1D matrix
-  //Turn the 2D R(transposed conjugated matrix) to the Stream
-  unsigned int k=0;
-  for(unsigned int r=0; r<10; r++){
-    for(unsigned int c=0; c<10; c++){
-      #pragma PIPELINE
-      MATRIX_OUT_T temp;
-      temp = matrixR_trans_conj[r][c]; // Set a temp to avoid RAW to apply the pipeline
-      matrixR[k] = temp;
-      //matrixLstrm.write(temp);
-      k++;
-    }
-  }
-  
 
-  //Delete this part to add other kernel
-  for(unsigned int QAQ = 0; QAQ<10; QAQ++){
-    temp_VS = VsStrm.read();
-  }
-  //add your kernel---------------------------------------------------
-  //param 
-  //static hls::stream<MATRIX_OUT_T> matrixLstrm;
-  //static hls::stream<MATRIX_IN_T> VsStrm;
 
-  //std::cout<< "4" <<std::endl;
+  ///要做的時候要把這邊刪掉=======
+  for(unsigned j=0; j<10; j++){
+    MATRIX_IN_T tmp;
+    tmp = VsStrm.read();
+  }
+  for(unsigned k=0; k<100 ;k++){
+    matrixR[k]= RStrm.read();
+  }
+  //===========================
+  //addd your kernel================================
+  //RStrm
+  //VsStrm
+  //================================================
 }
 
 

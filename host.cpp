@@ -142,19 +142,19 @@ int main(int argc, const char* argv[]) {
     int in_size = numRow * numCol;
     int R_size = 100;
     int Vs_size = 10;
-    std::complex<float>* dataA_qrd;
-    std::complex<float>* dataR_qrd;
-    std::complex<float>* dataVs_qrd;
-    dataA_qrd = aligned_alloc<std::complex<float>>(in_size);
-    //dataQ_qrd = aligned_alloc<std::complex<float>>(Q_size);
-    dataR_qrd = aligned_alloc<std::complex<float>>(R_size);
-    dataVs_qrd = aligned_alloc<std::complex<float>>(Vs_size);
+    std::complex<double>* dataA_qrd;
+    std::complex<double>* dataR_qrd;
+    std::complex<double>* dataVs_qrd;
+    dataA_qrd = aligned_alloc<std::complex<double>>(in_size);
+    //dataQ_qrd = aligned_alloc<std::complex<double>>(Q_size);
+    dataR_qrd = aligned_alloc<std::complex<double>>(R_size);
+    dataVs_qrd = aligned_alloc<std::complex<double>>(Vs_size);
 
     //****************************************************************//
     //Get Input Testbench                                             //
     //****************************************************************//
-    std::complex<float> A[numRow][numCol] = {0}; 
-    std::complex<float> Vs[Vs_size] = {1};
+    std::complex<double> A[numRow][numCol] = {0}; 
+    std::complex<double> Vs[Vs_size] = {1};
     std::string base_path = "./data/";
     std::string file_A =
         base_path + "A_matType_" + std::to_string(1) + "_" + std::to_string(0) + ".txt";
@@ -162,10 +162,10 @@ int main(int argc, const char* argv[]) {
     std::cout <<"read file: "<< file_A << std::endl;
     
 
-    std::complex<float>* A_ptr = reinterpret_cast<std::complex<float>*>(A);
+    std::complex<double>* A_ptr = reinterpret_cast<std::complex<double>*>(A);
     
-    //std::complex<float>* Q_ptr = reinterpret_cast<std::complex<float>*>(Q_expected);
-    //std::complex<float>* R_ptr = reinterpret_cast<std::complex<float>*>(R_expected);
+    //std::complex<double>* Q_ptr = reinterpret_cast<std::complex<double>*>(Q_expected);
+    //std::complex<double>* R_ptr = reinterpret_cast<std::complex<double>*>(R_expected);
 
     int A_size = numRow * numCol;
     readTxt(file_A, A_ptr, A_size);
@@ -185,7 +185,7 @@ int main(int argc, const char* argv[]) {
         dataVs_qrd[i] = Vs[i];
     }
     //--------------------------------------------------------------
-    std::complex<float>* dataA = new std::complex<float>[in_size];
+    std::complex<double>* dataA = new std::complex<double>[in_size];
     for (int i = 0; i < in_size; ++i) {
         dataA[i] = dataA_qrd[i];
     }
@@ -201,19 +201,19 @@ int main(int argc, const char* argv[]) {
     // mext_o[0].obj = tau_qrd;
     // mext_o[0].param = 0;
     mext_A[0] = {0, dataA_qrd, Top_Kernel()};
-    mext_Vs[0] = {1, dataVs_qrd, Top_Kernel()};
+    mext_Vs[0] = {1, dataVs_qrd, Top_Kernel()};////////VS/////////////
     mext_R[0] = {2, dataR_qrd, Top_Kernel()};
     // Create device buffer and map dev buf to host buf
     std::vector<cl::Buffer> input_buffer(1),input_Vs_buffer(1), output_buffer_R(1);
 
     input_buffer[0] = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE,
-                                 sizeof(std::complex<float>) * in_size, &mext_A[0]);
+                                 sizeof(std::complex<double>) * in_size, &mext_A[0]);
     //output_buffer_Q[0] = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY,
-    //                              sizeof(std::complex<float>) * Q_size, &mext_Q[0]);
+    //                              sizeof(std::complex<double>) * Q_size, &mext_Q[0]);
     input_Vs_buffer[0] = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE,
-                                 sizeof(std::complex<float>) * Vs_size, &mext_Vs[0]);
+                                 sizeof(std::complex<double>) * Vs_size, &mext_Vs[0]);
     output_buffer_R[0] = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY,
-                                  sizeof(std::complex<float>) * R_size, &mext_R[0]); 
+                                  sizeof(std::complex<double>) * R_size, &mext_R[0]); 
     // Data transfer from host buffer to device buffer
     std::vector<std::vector<cl::Event> > kernel_evt(2);
     kernel_evt[0].resize(1);
