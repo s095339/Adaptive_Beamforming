@@ -5,6 +5,6 @@
 #include <complex>
 //typedef hls::x_complex<float> MATRIX_IN_T;
 //typedef hls::x_complex<float> MATRIX_OUT_T;
-typedef std::complex<float> MATRIX_IN_T;
-typedef std::complex<float> MATRIX_OUT_T;
+typedef std::complex<double> MATRIX_IN_T;
+typedef std::complex<double> MATRIX_OUT_T;
 #endif
