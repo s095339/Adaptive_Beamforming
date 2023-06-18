@@ -71,14 +71,14 @@ void Master2Stream(MATRIX_IN_T* matrixA,
 void QRF( hls::stream<MATRIX_IN_T>& matrixAStrm,
 	        //hls::stream<MATRIX_OUT_T>& matrixQStrm,
           hls::stream<MATRIX_OUT_T>& matrixRStrm,
-          hls::stream<MATRIX_IN_T>& VsStrm_out1,
-          hls::stream<MATRIX_IN_T>& VsStrm_out2,
+          hls::stream<MATRIX_OUT_T>& VsStrm_out1,
+          hls::stream<MATRIX_OUT_T>& VsStrm_out2,
           hls::stream<MATRIX_OUT_T>& QRF_A_outstream
 	    ) 
       
 {
     //xf::solver::qrf<0, 100, 10, MATRIX_IN_T, MATRIX_OUT_T, my_qrf_traits>(matrixAStrm,matrixQStrm,matrixRStrm,VsStrm_out1,VsStrm_out2,QRF_A_outstream);
-    qrf_alt<TransposedQ, RowsA, ColsA, QRF_TRAITS, InputType, OutputType>(matrixAStrm,matrixRStrm,VsStrm_out1,VsStrm_out2,QRF_A_outstream);
+    xf::solver::qrf_alt<0, 100, 10, my_qrf_traits ,MATRIX_IN_T, MATRIX_OUT_T>(matrixAStrm,matrixRStrm,VsStrm_out1,VsStrm_out2,QRF_A_outstream);
 }
 
 void qrf_transpose(     
@@ -172,7 +172,7 @@ void pass_dataflow(
   //static hls::stream<MATRIX_OUT_T> matrixLstrm;
   //==================================================
   //static hls::stream<MATRIX_IN_T> inhom_Vs_instream;
-  static hls::stream<MATRIX_IN_T> inhom_A_outstream;
+  static hls::stream<MATRIX_OUT_T> inhom_A_outstream;
   static hls::stream<MATRIX_IN_T> weight_stream;
 
   //==================================================
@@ -230,7 +230,7 @@ extern "C" void Top_Kernel(
     
     MATRIX_IN_T Vs[10],
     //hls::x_complex<double> matrixQ[100*100],
-    MATRIX_OUT_T matrixR[1000]
+    MATRIX_OUT_T matrixR[100]
     ) 
 {
 // extern "C" void kernel_geqrf_0(double dataA[MA*NA], double tau[NA]) {
@@ -241,7 +241,7 @@ extern "C" void Top_Kernel(
 //#pragma HLS INTERFACE m_axi port = matrixQ bundle = gmem1 offset = slave num_read_outstanding = 16 max_read_burst_length = \
 //    32
 #pragma HLS INTERFACE m_axi port = Vs bundle = gmem1 offset = slave depth = 10
-#pragma HLS INTERFACE m_axi port = matrixR bundle = gmem2 offset = slave depth = 1000
+#pragma HLS INTERFACE m_axi port = matrixR bundle = gmem2 offset = slave depth = 100
 
 
 //#pragma HLS INTERFACE s_axilite port = matrixA bundle = control

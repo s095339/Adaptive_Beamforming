@@ -140,14 +140,14 @@ int main(int argc, const char* argv[]) {
     //Input Output Data Setting                                       //
     //****************************************************************//
     int in_size = numRow * numCol;
-    int W_size = 10;
+    int R_size = 100;
     int Vs_size = 10;
     std::complex<double>* dataA_qrd;
-    std::complex<double>* dataW_qrd;
+    std::complex<double>* dataR_qrd;
     std::complex<double>* dataVs_qrd;
     dataA_qrd = aligned_alloc<std::complex<double>>(in_size);
     //dataQ_qrd = aligned_alloc<std::complex<double>>(Q_size);
-    dataW_qrd = aligned_alloc<std::complex<double>>(W_size);
+    dataR_qrd = aligned_alloc<std::complex<double>>(R_size);
     dataVs_qrd = aligned_alloc<std::complex<double>>(Vs_size);
 
     //****************************************************************//
@@ -155,9 +155,9 @@ int main(int argc, const char* argv[]) {
     //****************************************************************//
     std::complex<double> A[numRow][numCol] = {0}; 
     std::complex<double> Vs[Vs_size] = {1};
-    std::string base_path = "./data/";
+    std::string base_path = "./data/organized_input/";
     std::string file_A =
-        base_path + "A_matType_" + std::to_string(1) + "_" + std::to_string(0) + ".txt";
+        base_path + "A_" + std::to_string(1)+ ".txt";
    
     std::cout <<"read file: "<< file_A << std::endl;
     
@@ -193,7 +193,7 @@ int main(int argc, const char* argv[]) {
     // DDR Settings
     std::vector<cl_mem_ext_ptr_t> mext_A(1);
     std::vector<cl_mem_ext_ptr_t> mext_Vs(1);
-    std::vector<cl_mem_ext_ptr_t> mext_W(1);
+    std::vector<cl_mem_ext_ptr_t> mext_R(1);
     // mext_i[0].flags = XCL_MEM_DDR_BANK0;
     // mext_o[0].flags = XCL_MEM_DDR_BANK0;
     // mext_i[0].obj = dataA_qrd;
@@ -202,9 +202,9 @@ int main(int argc, const char* argv[]) {
     // mext_o[0].param = 0;
     mext_A[0] = {0, dataA_qrd, Top_Kernel()};
     mext_Vs[0] = {1, dataVs_qrd, Top_Kernel()};////////VS/////////////
-    mext_W[0] = {2, dataW_qrd, Top_Kernel()};
+    mext_R[0] = {2, dataR_qrd, Top_Kernel()};
     // Create device buffer and map dev buf to host buf
-    std::vector<cl::Buffer> input_buffer(1),input_Vs_buffer(1), output_buffer_W(1);
+    std::vector<cl::Buffer> input_buffer(1),input_Vs_buffer(1), output_buffer_R(1);
 
     input_buffer[0] = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE,
                                  sizeof(std::complex<double>) * in_size, &mext_A[0]);
@@ -212,28 +212,29 @@ int main(int argc, const char* argv[]) {
     //                              sizeof(std::complex<double>) * Q_size, &mext_Q[0]);
     input_Vs_buffer[0] = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE,
                                  sizeof(std::complex<double>) * Vs_size, &mext_Vs[0]);
-    output_buffer_W[0] = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY,
-                                  sizeof(std::complex<double>) * W_size, &mext_W[0]); 
+    output_buffer_R[0] = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY,
+                                  sizeof(std::complex<double>) * R_size, &mext_R[0]); 
     // Data transfer from host buffer to device buffer
-    std::vector<std::vector<cl::Event> > kernel_evt(2);
+    std::vector<std::vector<cl::Event> > kernel_evt(3);
     kernel_evt[0].resize(1);
     kernel_evt[1].resize(1);
+    kernel_evt[2].resize(1);
 
-    std::vector<cl::Memory> ob_in,ob_vs, ob_out_W; //ob_out_Q;
+    std::vector<cl::Memory> ob_in,ob_vs, ob_out_R; //ob_out_Q;
     ob_in.push_back(input_buffer[0]);
     ob_vs.push_back(input_Vs_buffer[0]);
     //ob_out_Q.push_back(input_buffer[0]);
     //ob_out_Q.push_back(output_buffer_Q[0]);
     //ob_out_R.push_back(input_buffer[0]);
-    ob_out_W.push_back(output_buffer_W[0]);
+    ob_out_R.push_back(output_buffer_R[0]);
 
     // Setup kernel
     Top_Kernel.setArg(0, input_buffer[0]);
     Top_Kernel.setArg(1, input_Vs_buffer[0]);
-    Top_Kernel.setArg(2, output_buffer_W[0]);
+    Top_Kernel.setArg(2, output_buffer_R[0]);
 
     q.enqueueMigrateMemObjects(ob_in, 0, nullptr, &kernel_evt[0][0]); // 0 : migrate from host to dev
-    q.enqueueMigrateMemObjects(ob_vs, 0, nullptr, &kernel_evt[0][0]);
+    q.enqueueMigrateMemObjects(ob_vs, 0, nullptr, &kernel_evt[1][0]);
     q.finish();
     std::cout << "INFO: Finish data transfer from host to device" << std::endl;
 
@@ -259,11 +260,11 @@ int main(int argc, const char* argv[]) {
    
     // Data transfer from device buffer to host buffer
     //q.enqueueMigrateMemObjects(ob_out_Q, 1, nullptr, nullptr); // 1 : migrate from dev to host
-    q.enqueueMigrateMemObjects(ob_out_W, 1, nullptr, nullptr); // 1 : migrate from dev to host
+    q.enqueueMigrateMemObjects(ob_out_R, 1, nullptr, &kernel_evt[2][0]); // 1 : migrate from dev to host
     q.finish();
-    std::cout << "printout  W matrix" << std::endl;
-    for(int j=0;j<W_size;j++)
-        std::cout << dataW_qrd[j] << std::endl; 
+    std::cout << "printout R matrix" << std::endl;
+    for(int j=0;j<R_size;j++)
+        std::cout << dataR_qrd[j] << std::endl; 
 
     
 }
