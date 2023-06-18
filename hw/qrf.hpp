@@ -700,10 +700,11 @@ qrf_out_row_assign:
 // QRF_ALT: Optimized for throughput.
 template <bool TransposedQ, int RowsA, int ColsA, typename QRF_TRAITS, typename InputType, typename OutputType>
 void qrf_alt(hls::stream<InputType>& matrixAStrm,
-             hls::stream<OutputType>& matrixQStrm,
+             //hls::stream<OutputType>& matrixQStrm,
              hls::stream<OutputType>& matrixRStrm,
              hls::stream<InputType>& VsStrm_out1,
-             hls::stream<InputType>& VsStrm_out2
+             hls::stream<InputType>& VsStrm_out2,
+             hls::stream<OutputType>& QRF_A_outstream
              ) {
     // Verify that template parameters are correct in simulation
     if (RowsA < ColsA) {
@@ -758,7 +759,8 @@ row_copy:
     col_copy_r_i:
         for (int c = 0; c < ColsA; c++) {
 #pragma HLS PIPELINE
-            r_i[r][c] = matrixAStrm.read();
+            r_i[r][c] = matrixAStrm.read();  
+            QRF_A_outstream.write(r_i[r][c]);
         }
     }
 
@@ -830,21 +832,21 @@ px:
 
 // Assign final outputs
 row_assign_loop:
-    for (int r = 0; r < RowsA; r++) {
+    for (int r = 0; r < ColsA; r++) { //原本是r<RowsA
 // Merge loops to parallelize the Q and R writes
-#pragma HLS LOOP_MERGE force
+//#pragma HLS LOOP_MERGE force
     col_assign_loop:
-        for (int c = 0; c < RowsA; c++) {
+        for (int c = 0; c < ColsA; c++) {//原本是c<RowsA
 #pragma HLS PIPELINE
-            if (TransposedQ == true) {
+          /*  if (TransposedQ == true) {
                 matrixQStrm.write(q_i[r][c]);
             } else {
                 matrixQStrm.write(hls::x_conj(q_i[c][r]));
             }
-
-            if (c < ColsA) {
+*/
+            //if (c < ColsA) {
                 matrixRStrm.write(r_i[r][c]);
-            }
+            //}
         }
     }
 
@@ -875,7 +877,8 @@ void qrf(hls::stream<InputType>& matrixAStrm,
          hls::stream<OutputType>& matrixQStrm,
          hls::stream<OutputType>& matrixRStrm,
          hls::stream<InputType>& VsStrm_out1,
-         hls::stream<InputType>& VsStrm_out2
+         hls::stream<InputType>& VsStrm_out2,
+         hls::stream<MATRIX_OUT_T>& QRF_A_outstream
          ) {
     switch (QRF_TRAITS::ARCH) {
         case 0:
@@ -883,8 +886,8 @@ void qrf(hls::stream<InputType>& matrixAStrm,
                                                                                     matrixRStrm);
             break;
         case 1:
-            qrf_alt<TransposedQ, RowsA, ColsA, QRF_TRAITS, InputType, OutputType>(matrixAStrm, matrixQStrm,
-                                                                                  matrixRStrm,VsStrm_out1,VsStrm_out2);
+            qrf_alt<TransposedQ, RowsA, ColsA, QRF_TRAITS, InputType, OutputType>(matrixAStrm,// matrixQStrm,
+                                                                                  matrixRStrm,VsStrm_out1,VsStrm_out2,QRF_A_outstream);
             break;
         default:
             qrf_basic<TransposedQ, RowsA, ColsA, QRF_TRAITS, InputType, OutputType>(matrixAStrm, matrixQStrm,
