@@ -33,6 +33,9 @@
 
 //#include "xf_solver_L2.hpp"
 #include "kernels.hpp"
+//#include inhom & Weights_Mul
+#include "hw/Weights_CAL_Mul.h"
+
 //#include "utils/x_matrix_utils.hpp"
 #include <iostream>
 #include <stdio.h>
@@ -66,17 +69,21 @@ void Master2Stream(MATRIX_IN_T* matrixA,
 }
 
 void QRF( hls::stream<MATRIX_IN_T>& matrixAStrm,
-	        hls::stream<MATRIX_OUT_T>& matrixQStrm,
+	        //hls::stream<MATRIX_OUT_T>& matrixQStrm,
           hls::stream<MATRIX_OUT_T>& matrixRStrm,
           hls::stream<MATRIX_IN_T>& VsStrm_out1,
-          hls::stream<MATRIX_IN_T>& VsStrm_out2
+          hls::stream<MATRIX_IN_T>& VsStrm_out2,
+          hls::stream<MATRIX_OUT_T>& QRF_A_outstream
 	    ) 
       
 {
-    xf::solver::qrf<0, 100, 10, MATRIX_IN_T, MATRIX_OUT_T, my_qrf_traits>(matrixAStrm, matrixQStrm,matrixRStrm,VsStrm_out1,VsStrm_out2);
+    //xf::solver::qrf<0, 100, 10, MATRIX_IN_T, MATRIX_OUT_T, my_qrf_traits>(matrixAStrm,matrixQStrm,matrixRStrm,VsStrm_out1,VsStrm_out2,QRF_A_outstream);
+    qrf_alt<TransposedQ, RowsA, ColsA, QRF_TRAITS, InputType, OutputType>(matrixAStrm,matrixRStrm,VsStrm_out1,VsStrm_out2,QRF_A_outstream);
 }
 
 void qrf_transpose(     
+  hls::stream<MATRIX_OUT_T>& QRF_A_outstream,
+  hls::stream<MATRIX_IN_T>& qrf_transpose_A_outstream,
   hls::stream<MATRIX_OUT_T>& matrixQStrm,
 	hls::stream<MATRIX_OUT_T>& matrixRStrm,
   hls::stream<MATRIX_IN_T>& VsStrm_out2,
@@ -152,36 +159,54 @@ void pass_dataflow(
 
   //std::cout<< "0" <<std::endl;
   static hls::stream<MATRIX_IN_T> matrixAStrm;
-  static hls::stream<MATRIX_OUT_T> matrixQStrm;
+  //static hls::stream<MATRIX_OUT_T> matrixQStrm;
   static hls::stream<MATRIX_OUT_T> matrixRStrm;
   // in out stream for Vs to avoid bypass path=======
-  static hls::stream<MATRIX_IN_T> VsStrm_out1;
-  static hls::stream<MATRIX_IN_T> VsStrm_out2;
+  static hls::stream<MATRIX_OUT_T> qrf_A_outstream;
+  static hls::stream<MATRIX_OUT_T> VsStrm_out1;
+  static hls::stream<MATRIX_OUT_T> VsStrm_out2;
   //=================================================
   static hls::stream<MATRIX_IN_T> VsStrm;
   static hls::stream<MATRIX_IN_T> RStrm;
+  //static hls::stream<MATRIX_IN_T> qrf_transpose_A_outstream;
   //static hls::stream<MATRIX_OUT_T> matrixLstrm;
-  //10X10 matrix
-  #pragma HLS stream depth=1000 variable=matrixAStrm
-  #pragma HLS stream depth=10000 variable=matrixQStrm
-  #pragma HLS stream depth=1000 variable=matrixRStrm
+  //==================================================
+  //static hls::stream<MATRIX_IN_T> inhom_Vs_instream;
+  static hls::stream<MATRIX_IN_T> inhom_A_outstream;
+  static hls::stream<MATRIX_IN_T> weight_stream;
 
+  //==================================================
+
+  #pragma HLS stream depth=1000 variable=matrixAStrm
+  //#pragma HLS stream depth=10000 variable=matrixQStrm
+  #pragma HLS stream depth=100 variable=matrixRStrm
+
+  #pragma HLS stream depth=1000 variable=qrf_A_outstream
   #pragma HLS stream depth=10 variable=VsStrm_out1
   #pragma HLS stream depth=10 variable=VsStrm_out2
 
   #pragma HLS stream depth=10 variable=VsStrm
   #pragma HLS stream depth=100 variable=RStrm
+
+  #pragma HLS stream depth=1000 variable=inhom_A_outstream
+  #pragma HLS stream depth=10 variable=weight_stream
+  
+  //#pragma HLS stream depth=1000 variable=qrf_transpose_A_outstream
   //Turn the 2Darray MatrixA  sent from host to kernel by axi_master to the hls:stream type 
   Master2Stream(matrixA, matrixAStrm,Vs,VsStrm_out1, rowA, colA);
   
   //Vitis Library QR Factorization-------------- 
-  QRF(matrixAStrm,  matrixQStrm, matrixRStrm,VsStrm_out1,VsStrm_out2);
+  QRF(matrixAStrm,matrixRStrm,VsStrm_out1,VsStrm_out2,qrf_A_outstream);
   
 
-  qrf_transpose(matrixQStrm,matrixRStrm,VsStrm_out2,VsStrm,RStrm, 
-                 rowQ, colQ, rowR, colR);
+  /*qrf_transpose(qrf_A_outstream,qrf_transpose_A_outstream,matrixQStrm,matrixRStrm,VsStrm_out2,VsStrm,RStrm, 
+                 rowQ, colQ, rowR, colR);*/
 
+  inhom(weight_stream,matrixRStrm,VsStrm_out2,qrf_A_outstream,inhom_A_outstream);
+  
+  Weights_Mul(matrixR,inhom_A_outstream,weight_stream);
 
+/*
   ///要做的時候要把這邊刪掉=======
   for(unsigned j=0; j<10; j++){
     MATRIX_IN_T tmp;
@@ -195,6 +220,7 @@ void pass_dataflow(
   //RStrm
   //VsStrm
   //================================================
+*/
 }
 
 
@@ -204,7 +230,7 @@ extern "C" void Top_Kernel(
     
     MATRIX_IN_T Vs[10],
     //hls::x_complex<double> matrixQ[100*100],
-    MATRIX_OUT_T matrixR[100]
+    MATRIX_OUT_T matrixR[1000]
     ) 
 {
 // extern "C" void kernel_geqrf_0(double dataA[MA*NA], double tau[NA]) {
@@ -215,7 +241,7 @@ extern "C" void Top_Kernel(
 //#pragma HLS INTERFACE m_axi port = matrixQ bundle = gmem1 offset = slave num_read_outstanding = 16 max_read_burst_length = \
 //    32
 #pragma HLS INTERFACE m_axi port = Vs bundle = gmem1 offset = slave depth = 10
-#pragma HLS INTERFACE m_axi port = matrixR bundle = gmem2 offset = slave depth = 100
+#pragma HLS INTERFACE m_axi port = matrixR bundle = gmem2 offset = slave depth = 1000
 
 
 //#pragma HLS INTERFACE s_axilite port = matrixA bundle = control
