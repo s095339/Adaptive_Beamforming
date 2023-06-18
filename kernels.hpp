@@ -24,6 +24,7 @@
 
 //#include "hw/pseudosqrt.hpp"
 #include "hw/qrf.hpp"
+#include "hw/Weights_CAL_Mul.h"
 //#include "hw/qr_inverse.hpp"
 //#include "hw/svd.hpp"
 //#include "hw/cholesky_inverse.hpp"

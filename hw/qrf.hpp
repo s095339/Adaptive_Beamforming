@@ -878,7 +878,7 @@ void qrf(hls::stream<InputType>& matrixAStrm,
          hls::stream<OutputType>& matrixRStrm,
          hls::stream<InputType>& VsStrm_out1,
          hls::stream<InputType>& VsStrm_out2,
-         hls::stream<MATRIX_OUT_T>& QRF_A_outstream
+         hls::stream<OutputType>& QRF_A_outstream
          ) {
     switch (QRF_TRAITS::ARCH) {
         case 0:

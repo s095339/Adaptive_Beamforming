@@ -1,5 +1,5 @@
 
-#include "hw/Weights_CAL_Mul.h"
+#include "Weights_CAL_Mul.h"
 
 
 void A_stream2stream(hls::stream<complex<double>> &A_outstream, hls::stream<complex<double>> &A_instream){

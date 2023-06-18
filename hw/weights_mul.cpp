@@ -1,4 +1,4 @@
-#include "hw/Weights_CAL_Mul.h"
+#include "Weights_CAL_Mul.h"
 
 
 void Weights_Mul(complex<double> output_result[S], hls::stream<complex<double>> &A_instream, hls::stream<complex<double>> &weights_instream){
