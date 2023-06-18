@@ -78,7 +78,7 @@ void QRF( hls::stream<MATRIX_IN_T>& matrixAStrm,
       
 {
     //xf::solver::qrf<0, 100, 10, MATRIX_IN_T, MATRIX_OUT_T, my_qrf_traits>(matrixAStrm,matrixQStrm,matrixRStrm,VsStrm_out1,VsStrm_out2,QRF_A_outstream);
-    qrf_alt<TransposedQ, RowsA, ColsA, QRF_TRAITS, InputType, OutputType>(matrixAStrm,matrixRStrm,VsStrm_out1,VsStrm_out2,QRF_A_outstream);
+    xf::solver::qrf_alt<TransposedQ, RowsA, ColsA, QRF_TRAITS, InputType, OutputType>(matrixAStrm,matrixRStrm,VsStrm_out1,VsStrm_out2,QRF_A_outstream);
 }
 
 void qrf_transpose(     
