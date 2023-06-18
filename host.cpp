@@ -215,10 +215,10 @@ int main(int argc, const char* argv[]) {
     output_buffer_R[0] = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY,
                                   sizeof(std::complex<double>) * R_size, &mext_R[0]); 
     // Data transfer from host buffer to device buffer
-    std::vector<std::vector<cl::Event> > kernel_evt(3);
+    std::vector<std::vector<cl::Event> > kernel_evt(2);
     kernel_evt[0].resize(1);
     kernel_evt[1].resize(1);
-    kernel_evt[2].resize(1);
+    //kernel_evt[2].resize(1);
 
     std::vector<cl::Memory> ob_in,ob_vs, ob_out_R; //ob_out_Q;
     ob_in.push_back(input_buffer[0]);
@@ -234,7 +234,7 @@ int main(int argc, const char* argv[]) {
     Top_Kernel.setArg(2, output_buffer_R[0]);
 
     q.enqueueMigrateMemObjects(ob_in, 0, nullptr, &kernel_evt[0][0]); // 0 : migrate from host to dev
-    q.enqueueMigrateMemObjects(ob_vs, 0, nullptr, &kernel_evt[1][0]);
+    q.enqueueMigrateMemObjects(ob_vs, 0, nullptr, &kernel_evt[0][0]);
     q.finish();
     std::cout << "INFO: Finish data transfer from host to device" << std::endl;
 
@@ -260,7 +260,7 @@ int main(int argc, const char* argv[]) {
    
     // Data transfer from device buffer to host buffer
     //q.enqueueMigrateMemObjects(ob_out_Q, 1, nullptr, nullptr); // 1 : migrate from dev to host
-    q.enqueueMigrateMemObjects(ob_out_R, 1, nullptr, &kernel_evt[2][0]); // 1 : migrate from dev to host
+    q.enqueueMigrateMemObjects(ob_out_R, 1, nullptr, nullptr); // 1 : migrate from dev to host
     q.finish();
     std::cout << "printout R matrix" << std::endl;
     for(int j=0;j<R_size;j++)

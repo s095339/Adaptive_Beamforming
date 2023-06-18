@@ -173,7 +173,7 @@ void pass_dataflow(
   //==================================================
   //static hls::stream<MATRIX_IN_T> inhom_Vs_instream;
   static hls::stream<MATRIX_OUT_T> inhom_A_outstream;
-  static hls::stream<MATRIX_IN_T> weight_stream;
+  static hls::stream<MATRIX_IN_T> weights_instream;
 
   //==================================================
 
@@ -189,7 +189,7 @@ void pass_dataflow(
   #pragma HLS stream depth=100 variable=RStrm
 
   #pragma HLS stream depth=1000 variable=inhom_A_outstream
-  #pragma HLS stream depth=10 variable=weight_stream
+  #pragma HLS stream depth=10 variable=weights_instream
   
   //#pragma HLS stream depth=1000 variable=qrf_transpose_A_outstream
   //Turn the 2Darray MatrixA  sent from host to kernel by axi_master to the hls:stream type 
@@ -202,9 +202,9 @@ void pass_dataflow(
   /*qrf_transpose(qrf_A_outstream,qrf_transpose_A_outstream,matrixQStrm,matrixRStrm,VsStrm_out2,VsStrm,RStrm, 
                  rowQ, colQ, rowR, colR);*/
 
-  inhom(weight_stream,matrixRStrm,VsStrm_out2,qrf_A_outstream,inhom_A_outstream);
+  inhom(weights_instream,matrixRStrm,VsStrm_out2,qrf_A_outstream,inhom_A_outstream);
   
-  Weights_Mul(matrixR,inhom_A_outstream,weight_stream);
+  Weights_Mul(matrixR,inhom_A_outstream,weights_instream);
 
 /*
   ///要做的時候要把這邊刪掉=======
