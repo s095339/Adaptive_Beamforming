@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <complex>
 #include <fstream>
+#include "math.h"
 
 #include "xcl2.hpp"
 //#include "xf_utils_sw/logger.hpp"
@@ -140,7 +141,7 @@ int main(int argc, const char* argv[]) {
     //Input Output Data Setting                                       //
     //****************************************************************//
     int in_size = numRow * numCol;
-    int W_size = 10;
+    int W_size = 100;
     int Vs_size = 10;
     std::complex<double>* dataA_qrd;
     std::complex<double>* dataW_qrd;
@@ -153,11 +154,15 @@ int main(int argc, const char* argv[]) {
     //****************************************************************//
     //Get Input Testbench                                             //
     //****************************************************************//
+
+    int angle_factor=50;  //=j  
+    double incident_angle_in_rad=(angle_factor*0.9)*M_PI/180; //incident angle=j*0.9
+    
     std::complex<double> A[numRow][numCol] = {0}; 
     std::complex<double> Vs[Vs_size] = {1};
-    std::string base_path = "./data/";
+    std::string base_path = "./organized_input/";
     std::string file_A =
-        base_path + "A_matType_" + std::to_string(1) + "_" + std::to_string(0) + ".txt";
+        base_path + "A_" + std::to_string(angle_factor) + ".txt";
    
     std::cout <<"read file: "<< file_A << std::endl;
     
@@ -182,7 +187,9 @@ int main(int argc, const char* argv[]) {
     }
 
     for(int i = 0; i < Vs_size; i++){
-        dataVs_qrd[i] = Vs[i];
+        dataVs_qrd[i] =std::polar(1.0,i*M_PI*sin(incident_angle_in_rad));
+        std::cout<<dataVs_qrd[i]<<std::endl;
+        //dataVs_qrd[i] = Vs[i];
     }
     //--------------------------------------------------------------
     std::complex<double>* dataA = new std::complex<double>[in_size];
@@ -233,13 +240,14 @@ int main(int argc, const char* argv[]) {
     Top_Kernel.setArg(2, output_buffer_W[0]);
 
     q.enqueueMigrateMemObjects(ob_in, 0, nullptr, &kernel_evt[0][0]); // 0 : migrate from host to dev
-    q.enqueueMigrateMemObjects(ob_vs, 0, nullptr, &kernel_evt[0][0]);
+    q.finish();
+    q.enqueueMigrateMemObjects(ob_vs, 0, nullptr, &kernel_evt[1][0]);
     q.finish();
     std::cout << "INFO: Finish data transfer from host to device" << std::endl;
 
     
     //Top_Kernel.setArg(2, output_buffer_R[0]);
-    q.finish();
+    //q.finish();
     std::cout << "INFO: Finish kernel setup" << std::endl;
 
     // Variables to measure time

@@ -44,6 +44,273 @@
 #include "utils/std_complex_utils.h"
 #include <complex>
 #include "dut_type.hpp"
+
+
+void A_stream2stream(hls::stream<complex<double>> &A_outstream, hls::stream<complex<double>> &A_instream){
+	complex<double> read_value_A_instream;
+	for(int i=0;i<M*S;i++){
+#pragma HLS PIPELINE
+		read_value_A_instream = A_instream.read();
+		A_outstream.write(read_value_A_instream);
+	}
+}
+
+void read_fifo_U(complex<double> local_L[M][M], complex<double> local_U[M][M], hls::stream<complex<double>> &U_instream){
+
+	read_U_loop1:
+		for(int i=0;i<M;i++){
+			read_U_loop2:
+				for(int j=0;j<M;j++){
+					#pragma HLS PIPELINE II=1
+					complex<double> stream_read_data;
+					stream_read_data=U_instream.read();
+					local_U[i][j]=stream_read_data;
+					local_L[j][i]=conj(stream_read_data);
+				}
+		}
+}
+
+void read_fifo_Vs(complex<double> local_Vs[M], hls::stream<complex<double>> &Vs_instream){
+
+	read_Vs_loop:
+		for(int i=0;i<M;i++){
+			local_Vs[i]=Vs_instream.read();
+		}
+}
+
+void CALC_Z(complex<double> z[M], complex<double> local_L[M][M], complex<double> local_Vs[M]){
+
+	complex<double> tmp[M]={complex<double>(0,0)};
+	complex<double> ctemp(0,0);
+
+	tmp[0]=local_Vs[0]/local_L[0][0];
+	for(int N=1;N<M;N++){
+		ctemp=local_Vs[N];
+		for(int i=0;i<M;i++){
+#pragma HLS PIPELINE
+			ctemp-=local_L[N][i]*tmp[i];
+			/*if(i==N-1){
+				tmp[N] = (local_Vs[N]-ctemp)/local_L[N][N];
+				ctemp=complex<double>(0,0);
+				break;
+			}*/
+		}
+		tmp[N] = ctemp/local_L[N][N];
+		//ctemp=complex<double>(0,0);
+	}
+
+
+	/*
+	complex<double> tmp[M]={complex<double>(0,0)};
+	complex<double> ctemp(0,0);
+
+	tmp[0]=local_Vs[0]/local_L[0][0];
+	for(int N=1;N<M;N++){
+		ctemp=local_Vs[N];
+		for(int i=0;i<M;i++){
+#pragma HLS PIPELINE
+			ctemp-=local_L[N][i]*tmp[i];
+			if(i==N-1){
+				tmp[N] = ctemp/local_L[N][N];
+				break;
+			}
+		}
+	}
+	*/
+
+index_calz_read:
+	for(int i=0;i<M;i++){
+		z[i]=tmp[i];
+	}
+}
+
+void CALC_U(complex<double> u[M], complex<double> local_U[M][M], complex<double> z[M]){
+
+	complex<double> tmp[M]={complex<double>(0,0)};
+	complex<double> ctemp(0,0);
+
+	tmp[M-1]=z[M-1]/local_U[M-1][M-1];
+	//ctemp=z[M-2];
+	for(int N=M-2;N>=0;N--){
+		ctemp=z[N];
+		for(int i=M-1;i>=0;i--){
+#pragma HLS PIPELINE
+			ctemp-=local_U[N][i]*tmp[i];
+			/*if(i==N+1){
+				tmp[N] = (z[N]-ctemp)/local_U[N][N];
+				ctemp=complex<double>(0,0);
+				break;
+			}*/
+		}
+		tmp[N] = ctemp/local_U[N][N];
+		//ctemp=complex<double>(0,0);
+	}
+/*
+	complex<double> tmp[M]={complex<double>(0,0)};
+	complex<double> ctemp(0,0);
+
+	tmp[M-1]=z[M-1]/local_U[M-1][M-1];
+	//ctemp=z[M-2];
+	for(int N=M-2;N>=0;N--){
+		ctemp=z[N];
+		for(int i=M-1;i>=0;i--){
+#pragma HLS PIPELINE
+			ctemp-=local_U[N][i]*tmp[i];
+			if(i==N+1){
+				tmp[N] = ctemp/local_U[N][N];
+				break;
+			}
+		}
+	}
+	*/
+
+index_calu_read:
+	for(int i=0;i<M;i++){
+		u[i]=tmp[i];
+	}
+}
+
+
+void CALC_Z_SQUARE(complex<double> &z_sqr, complex<double> z[M]){
+
+	complex<double> z_conj[M];
+	complex<double> tmp=complex<double>(0,0);
+	for(int i=0;i<M;i++){
+		z_conj[i]=conj(z[i]);
+		tmp+=z_conj[i]*z[i];
+	}
+	z_sqr=tmp;
+}
+
+
+void inhom(hls::stream<complex<double>> &weights, hls::stream<complex<double>> &U, hls::stream<complex<double>> &Vs, hls::stream<complex<double>> &A_instream, hls::stream<complex<double>> &A_outstream){
+
+//#pragma HLS INTERFACE mode=ap_fifo depth=10 port=weights
+//#pragma HLS INTERFACE mode=ap_fifo depth=100 port=U
+//#pragma HLS INTERFACE mode=ap_fifo depth=10 port=Vs
+
+//#pragma HLS INTERFACE mode=ap_ctrl_none port=return
+//#pragma HLS STREAM depth=100 variable=U
+//#pragma HLS STREAM depth=10 variable=weights
+//#pragma HLS STREAM depth=10 variable=Vs
+/*
+#pragma HLS INTERFACE axis port=weights
+#pragma HLS INTERFACE axis port=U
+#pragma HLS INTERFACE axis port=Vs
+#pragma HLS INTERFACE s_axilite port=return bundle=control
+#pragma HLS INTERFACE s_axilite port=z_2 bundle=control
+#pragma HLS INTERFACE m_axi port=z_2 offset=slave bundle=gmem
+*/
+
+complex<double> local_L[M][M];//resource limitation
+#pragma HLS ARRAY_PARTITION dim=2 type=complete variable=local_L
+complex<double> local_U[M][M];
+#pragma HLS ARRAY_PARTITION dim=2 type=complete variable=local_U
+complex<double> local_Vs[M];
+complex<double> u[M]={complex<double>(0,0)};
+complex<double> z[M]={complex<double>(0,0)};
+complex<double> z_sqr=complex<double>(0,0);
+complex<double> wt[M]={complex<double>(0,0)};;
+
+//#pragma HLS DATAFLOW
+
+/*
+read_U_loop1:
+	for(int i=0;i<M;i++){
+		read_U_loop2:
+			for(int j=0;j<M;j++){
+				#pragma HLS PIPELINE II=1
+				complex<double> stream_read_data;
+				stream_read_data=U.read();
+				local_U[i][j]=stream_read_data;
+				local_L[j][i]=conj(stream_read_data);
+			}
+	}
+
+read_Vs_loop:
+	for(int i=0;i<M;i++){
+		local_Vs[i]=Vs.read();
+	}
+*/
+
+A_stream2stream(A_outstream,A_instream);
+read_fifo_U(local_L,local_U,U);
+read_fifo_Vs(local_Vs,Vs);
+
+Calc_para:
+
+	CALC_Z(z,local_L,local_Vs);
+	CALC_Z_SQUARE(z_sqr,z);
+	CALC_U(u,local_U,z);
+
+
+
+
+Weights_write:
+	for(int i=0;i<M;i++){
+		wt[i]=u[i]/z_sqr;
+		weights.write(wt[i]);
+	}
+
+
+}
+
+
+
+
+///////
+void Weights_Mul(complex<double> output_result[S], hls::stream<complex<double>> &A_instream, hls::stream<complex<double>> &weights_instream){
+
+//#pragma HLS STREAM depth=1000 variable=A_instream
+//#pragma HLS STREAM depth=10 variable=weights_instream
+	//ADD STATIC
+static	complex<double> A_matrix_w[S][M]={complex<double>(0,0)};
+#pragma HLS ARRAY_RESHAPE variable=A_matrix_w type=block factor=2 dim=2
+#pragma HLS BIND_STORAGE variable=A_matrix_w type=ram_1wnr
+
+static	complex<double> weights[M]={complex<double>(0,0)};
+#pragma HLS ARRAY_RESHAPE variable=weights type=complete
+static	complex<double> results[S]={complex<double>(0,0)};
+//#pragma HLS ARRAY_PARTITION variable=results type=complete
+
+
+//read stream A and weights
+read_stream_input:
+	for(int i=0;i<S;i++){
+		for(int j=0;j<M;j++){
+#pragma HLS PIPELINE
+			A_matrix_w[i][j]=A_instream.read();
+			if(i==S-1){
+				weights[j]=weights_instream.read();
+			}
+		}
+	}
+/*
+	for(int i=0;i<M;i++){
+#pragma HLS PIPELINE
+		for(int j=0;j<S;j++){
+			results[j]+=A_matrix_w[j][i]*weights[i];
+		}
+	}
+*/
+
+	for(int i=0;i<S;i++){
+#pragma HLS PIPELINE
+		for(int j=0;j<M;j++){
+			results[i]+=A_matrix_w[i][j]*weights[j];
+		}
+	}
+
+//burst write to host
+burst_write_output:
+	for(int i=0;i<S;i++){
+#pragma HLS PIPELINE II=1
+		output_result[i]=results[i];
+	}
+
+
+}
+////////
 struct my_qrf_traits : xf::solver::qrfTraits {
     static const int ARCH = 1;//SEL_ARCH;
 };
@@ -78,7 +345,7 @@ void QRF( hls::stream<MATRIX_IN_T>& matrixAStrm,
       
 {
     //xf::solver::qrf<0, 100, 10, MATRIX_IN_T, MATRIX_OUT_T, my_qrf_traits>(matrixAStrm,matrixQStrm,matrixRStrm,VsStrm_out1,VsStrm_out2,QRF_A_outstream);
-    xf::solver::qrf_alt<TransposedQ, RowsA, ColsA, QRF_TRAITS, InputType, OutputType>(matrixAStrm,matrixRStrm,VsStrm_out1,VsStrm_out2,QRF_A_outstream);
+    xf::solver::qrf_alt<0, 100, 10, my_qrf_traits, MATRIX_IN_T, MATRIX_OUT_T>(matrixAStrm,matrixRStrm,VsStrm_out1,VsStrm_out2,QRF_A_outstream);
 }
 
 void qrf_transpose(     
@@ -177,19 +444,19 @@ void pass_dataflow(
 
   //==================================================
 
-  #pragma HLS stream depth=1000 variable=matrixAStrm
+  #pragma HLS stream depth=10000 variable=matrixAStrm
   //#pragma HLS stream depth=10000 variable=matrixQStrm
-  #pragma HLS stream depth=100 variable=matrixRStrm
+  #pragma HLS stream depth=10000 variable=matrixRStrm
 
-  #pragma HLS stream depth=1000 variable=qrf_A_outstream
-  #pragma HLS stream depth=10 variable=VsStrm_out1
-  #pragma HLS stream depth=10 variable=VsStrm_out2
+  #pragma HLS stream depth=10000 variable=qrf_A_outstream
+  #pragma HLS stream depth=1000 variable=VsStrm_out1
+  #pragma HLS stream depth=1000 variable=VsStrm_out2
 
-  #pragma HLS stream depth=10 variable=VsStrm
-  #pragma HLS stream depth=100 variable=RStrm
+  #pragma HLS stream depth=1000 variable=VsStrm
+  #pragma HLS stream depth=1000 variable=RStrm
 
-  #pragma HLS stream depth=1000 variable=inhom_A_outstream
-  #pragma HLS stream depth=10 variable=weight_stream
+  #pragma HLS stream depth=10000 variable=inhom_A_outstream
+  #pragma HLS stream depth=1000 variable=weight_stream
   
   //#pragma HLS stream depth=1000 variable=qrf_transpose_A_outstream
   //Turn the 2Darray MatrixA  sent from host to kernel by axi_master to the hls:stream type 
@@ -230,7 +497,7 @@ extern "C" void Top_Kernel(
     
     MATRIX_IN_T Vs[10],
     //hls::x_complex<double> matrixQ[100*100],
-    MATRIX_OUT_T matrixR[1000]
+    MATRIX_OUT_T matrixR[100]
     ) 
 {
 // extern "C" void kernel_geqrf_0(double dataA[MA*NA], double tau[NA]) {
@@ -241,7 +508,7 @@ extern "C" void Top_Kernel(
 //#pragma HLS INTERFACE m_axi port = matrixQ bundle = gmem1 offset = slave num_read_outstanding = 16 max_read_burst_length = \
 //    32
 #pragma HLS INTERFACE m_axi port = Vs bundle = gmem1 offset = slave depth = 10
-#pragma HLS INTERFACE m_axi port = matrixR bundle = gmem2 offset = slave depth = 1000
+#pragma HLS INTERFACE m_axi port = matrixR bundle = gmem2 offset = slave depth = 100
 
 
 //#pragma HLS INTERFACE s_axilite port = matrixA bundle = control
