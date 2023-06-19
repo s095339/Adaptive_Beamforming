@@ -194,6 +194,7 @@ $(BINARY_CONTAINERS): $(BINARY_CONTAINERS_DEPS)
 ############################## Setting Rules for Host (Building Host Executable) ##############################
 $(EXE_FILE): $(EXE_FILE_DEPS)
 	mkdir -p $(BUILD_DIR)
+	cp xrt.ini $(BUILD_DIR)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS)
 
 $(EMCONFIG):

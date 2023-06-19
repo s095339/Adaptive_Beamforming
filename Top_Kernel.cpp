@@ -458,6 +458,8 @@ void pass_dataflow(
   #pragma HLS stream depth=10000 variable=inhom_A_outstream
   #pragma HLS stream depth=1000 variable=weight_stream
   
+  #pragma HLS DATAFLOW
+  
   //#pragma HLS stream depth=1000 variable=qrf_transpose_A_outstream
   //Turn the 2Darray MatrixA  sent from host to kernel by axi_master to the hls:stream type 
   Master2Stream(matrixA, matrixAStrm,Vs,VsStrm_out1, rowA, colA);

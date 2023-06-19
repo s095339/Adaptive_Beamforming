@@ -154,12 +154,34 @@ int main(int argc, const char* argv[]) {
     //****************************************************************//
     //Get Input Testbench                                             //
     //****************************************************************//
-
-    int angle_factor=50;  //=j  
-    double incident_angle_in_rad=(angle_factor*0.9)*M_PI/180; //incident angle=j*0.9
+//vector of  to coordinate read
+    event:cl::Event buffDone,krnlDone,flagDone;
+    std::vector<cl::Event> wordWait;
+    std::vector<cl::Event> krnlWait;
+    std::vector<cl::Event> flagWait;
     
-    std::complex<double> A[numRow][numCol] = {0}; 
-    std::complex<double> Vs[Vs_size] = {1};
+    std::complex<double> A[numRow][numCol];
+    std::complex<double> Vs[Vs_size];
+
+        // DDR Settings
+    std::vector<cl_mem_ext_ptr_t> mext_A(1);
+    std::vector<cl_mem_ext_ptr_t> mext_Vs(1);
+    std::vector<cl_mem_ext_ptr_t> mext_W(1);
+    // mext_i[0].flags = XCL_MEM_DDR_BANK0;
+    // mext_o[0].flags = XCL_MEM_DDR_BANK0;
+    // mext_i[0].obj = dataA_qrd;
+    // mext_i[0].param = 0;
+    // mext_o[0].obj = tau_qrd;
+    // mext_o[0].param = 0;
+    mext_A[0] = {0, dataA_qrd, Top_Kernel()};
+    mext_Vs[0] = {1, dataVs_qrd, Top_Kernel()};
+    mext_W[0] = {2, dataW_qrd, Top_Kernel()};
+
+
+for(int angle_factor=51;angle_factor<53;angle_factor++){ 
+    double incident_angle_in_rad=(angle_factor*0.9)*M_PI/180; //incident angle=angle_factor*0.9
+    
+
     std::string base_path = "./organized_input/";
     std::string file_A =
         base_path + "A_" + std::to_string(angle_factor) + ".txt";
@@ -172,45 +194,30 @@ int main(int argc, const char* argv[]) {
     //std::complex<double>* Q_ptr = reinterpret_cast<std::complex<double>*>(Q_expected);
     //std::complex<double>* R_ptr = reinterpret_cast<std::complex<double>*>(R_expected);
 
+    //prepare input A and Vs
     int A_size = numRow * numCol;
     readTxt(file_A, A_ptr, A_size);
-    //TODO:Setting Vs input=======================//
-    //Vs = ....
-    //============================================//
+
     int k = 0;
     for (int r = 0; r < numRow; r++) {
         for (int c = 0; c < numCol; c++) {
             dataA_qrd[k] = A[r][c];
             k++;
         }
-        //std::cout<<std::endl;
     }
 
     for(int i = 0; i < Vs_size; i++){
-        dataVs_qrd[i] =std::polar(1.0,i*M_PI*sin(incident_angle_in_rad));
+        dataVs_qrd[i] =std::polar(1.0,-i*M_PI*sin(incident_angle_in_rad));
         std::cout<<dataVs_qrd[i]<<std::endl;
-        //dataVs_qrd[i] = Vs[i];
     }
     //--------------------------------------------------------------
-    std::complex<double>* dataA = new std::complex<double>[in_size];
-    for (int i = 0; i < in_size; ++i) {
-        dataA[i] = dataA_qrd[i];
-    }
 
-    // DDR Settings
-    std::vector<cl_mem_ext_ptr_t> mext_A(1);
-    std::vector<cl_mem_ext_ptr_t> mext_Vs(1);
-    std::vector<cl_mem_ext_ptr_t> mext_W(1);
-    // mext_i[0].flags = XCL_MEM_DDR_BANK0;
-    // mext_o[0].flags = XCL_MEM_DDR_BANK0;
-    // mext_i[0].obj = dataA_qrd;
-    // mext_i[0].param = 0;
-    // mext_o[0].obj = tau_qrd;
-    // mext_o[0].param = 0;
-    mext_A[0] = {0, dataA_qrd, Top_Kernel()};
-    mext_Vs[0] = {1, dataVs_qrd, Top_Kernel()};////////VS/////////////
-    mext_W[0] = {2, dataW_qrd, Top_Kernel()};
+
+
+
+
     // Create device buffer and map dev buf to host buf
+    
     std::vector<cl::Buffer> input_buffer(1),input_Vs_buffer(1), output_buffer_W(1);
 
     input_buffer[0] = cl::Buffer(context, CL_MEM_EXT_PTR_XILINX | CL_MEM_USE_HOST_PTR | CL_MEM_READ_WRITE,
@@ -228,11 +235,11 @@ int main(int argc, const char* argv[]) {
 
     std::vector<cl::Memory> ob_in,ob_vs, ob_out_W; //ob_out_Q;
     ob_in.push_back(input_buffer[0]);
-    ob_vs.push_back(input_Vs_buffer[0]);
+    ob_vs.push_back(input_Vs_buffer[0]);    
+    ob_out_W.push_back(output_buffer_W[0]);
     //ob_out_Q.push_back(input_buffer[0]);
     //ob_out_Q.push_back(output_buffer_Q[0]);
     //ob_out_R.push_back(input_buffer[0]);
-    ob_out_W.push_back(output_buffer_W[0]);
 
     // Setup kernel
     Top_Kernel.setArg(0, input_buffer[0]);
@@ -273,5 +280,7 @@ int main(int argc, const char* argv[]) {
     for(int j=0;j<W_size;j++)
         std::cout << dataW_qrd[j] << std::endl; 
 
-    
+}
+
+
 }

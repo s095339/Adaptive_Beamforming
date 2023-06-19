@@ -479,8 +479,8 @@
     "time_stamp": "2022-04-13-17:42:45",
     "options": "/opt/Xilinx/Vitis/2022.1/bin/unwrapped/lnx64.o/v++ -l -t hw --platform /opt/xilinx/platforms/xilinx_u50_gen3x16_xdma_5_202210_1/xilinx_u50_gen3x16_xdma_5_202210_1.xpfm --save-temps --config /mnt/HLSNAS/03.bMXnEl/workspace/final_project/Adaptive_Beamforming/config/conn_u50.cfg -I /ext --temp_dir _x_temp.hw.xilinx_u50_gen3x16_xdma_5_202210_1 --report_dir /mnt/HLSNAS/03.bMXnEl/workspace/final_project/Adaptive_Beamforming/reports/_build.hw.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel --optimize 2 -R 2 --kernel_frequency 300 -o build_dir.hw.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xclbin _x_temp.hw.xilinx_u50_gen3x16_xdma_5_202210_1/Top_Kernel.xo ",
     "xclbin_name": "Top_Kernel",
-    "uuid": "9961df95-73fb-452c-9a69-854edce12278",
-    "link_uuid": "9961df95-73fb-452c-9a69-854edce12278",
+    "uuid": "15cf43c0-7164-49fa-9d80-4cbbc169abda",
+    "link_uuid": "15cf43c0-7164-49fa-9d80-4cbbc169abda",
     "package_uuid": "",
     "system_compile_flow": false
    },
@@ -518,8 +518,8 @@
       {
        "name": "Top_Kernel",
        "estimated_resources": {
-        "LUT": "121",
-        "REG": "915",
+        "LUT": "29",
+        "REG": "3",
         "BRAM": "",
         "DSP": "",
         "URAM": ""
@@ -614,26 +614,26 @@
        "actual_resources": [
         {
          "design_state": "routed",
-         "LUT": "89915",
-         "REG": "107802",
-         "BRAM": "322",
-         "DSP": "547",
+         "LUT": "95557",
+         "REG": "115022",
+         "BRAM": "350",
+         "DSP": "638",
          "URAM": "0"
         },
         {
          "design_state": "fully_placed",
-         "LUT": "89915",
-         "REG": "107802",
-         "BRAM": "322",
-         "DSP": "547",
+         "LUT": "95552",
+         "REG": "115022",
+         "BRAM": "350",
+         "DSP": "638",
          "URAM": "0"
         },
         {
          "design_state": "synthesized",
-         "LUT": "97052",
-         "REG": "107376",
-         "BRAM": "322",
-         "DSP": "547",
+         "LUT": "103274",
+         "REG": "114966",
+         "BRAM": "350",
+         "DSP": "638",
          "URAM": "0"
         }
        ],
